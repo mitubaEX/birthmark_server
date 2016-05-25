@@ -26,13 +26,14 @@ def fuzzy_curl(birthmark, quely):
 
 def fuzzy_serchpy(birthmark, quely):
     start = time.time()
-    quely = quely.replace("[","").replace("]","").replace("/","%2").replace(";=", "%3B%253D").replace("(","\(").replace(")","\)").replace(" ", "")
-    quely = quely.replace("&","\&")
+    #quely = quely.replace("[","").replace("]","").replace("/","%2").replace(";=", "%3B%253D").replace("(","\(").replace(")","\)").replace(" ", "")
+    #quely = quely.replace("&","\&")
     con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     print
     print "quely: "+quely.replace("\)",")").replace("\(","(")
     print
-    response = con.select("\""+str(quely.replace("\)",")").replace("\(","("))+"\"")
+    #response = con.select("\""+str(quely.replace("\)",")").replace("\(","("))+"\"")
+    response = con.select("\""+str(quely)+"\"")
     for hit in response.results:
         print hit['filename'],hit['value']
     #print
