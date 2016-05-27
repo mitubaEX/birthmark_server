@@ -23,7 +23,7 @@ def do_upload():
     for tmp in barthmark_kind:
         os.system("java -jar ../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+tmp+" extract ../tmp/"+upload.filename+" > ./"+upload.filename+"-"+tmp+".csv")
     os.system("python birth_curl.py")
-    os.system("python fuzzy_curl.py")
+    os.system("python fuzzy_search.py")
     return template("search")
 
 run(host='0.0.0.0', port=8080)
