@@ -86,7 +86,7 @@ for i in tmp:
             cvfv.write("<doc>\n")
             cvfv.write("<field name=\"filename\">"+fuzzy_split[0]+"</field>\n")
             cvfv.write("<field name=\"value\">"+fuzzy_split[1]+"</field>\n")
-            fuzzy_serchpy("cvfv", fuzzy_split[1])
+            fuzzy_serchpy("fuzzy_cvfv", fuzzy_split[1])
             #search = commands.getoutput("curl http://localhost:8983/solr/cvfv/select?q=*"+fuzzy_split[1]+"*&wt=json&indent=true")
             #print search
         elif "fmc" in str(i):
@@ -94,7 +94,7 @@ for i in tmp:
             fmc.write("<doc>\n")
             fmc.write("<field name=\"filename\">"+fuzzy_split[0]+"</field>\n")
             fmc.write("<field name=\"value\">"+fuzzy_split[1]+"</field>\n")
-            fuzzy_serchpy("fmc", fuzzy_split[1])
+            fuzzy_serchpy("fuzzy_fmc", fuzzy_split[1])
             #search = commands.getoutput("curl http://localhost:8983/solr/fmc/select?q=*"+fuzzy_split[1]+"*&wt=json&indent=true")
             #print search
         elif "fuc" in str(i):
@@ -102,7 +102,7 @@ for i in tmp:
             fuc.write("<doc>\n")
             fuc.write("<field name=\"filename\">"+fuzzy_split[0]+"</field>\n")
             fuc.write("<field name=\"value\">"+fuzzy_split[1]+"</field>\n")
-            fuzzy_serchpy("fuc", fuzzy_split[1])
+            fuzzy_serchpy("fuzzy_fuc", fuzzy_split[1])
             #search = commands.getoutput("curl http://localhost:8983/solr/fuc/select?q=*"+fuzzy_split[1]+"*&wt=json&indent=true")
             #print search
         elif "kgram" in str(i):
@@ -110,7 +110,7 @@ for i in tmp:
             kgram.write("<doc>\n")
             kgram.write("<field name=\"filename\">"+fuzzy_split[0]+"</field>\n")
             kgram.write("<field name=\"value\">"+fuzzy_split[1]+"</field>\n")
-            fuzzy_serchpy("kgram", fuzzy_split[1])
+            fuzzy_serchpy("fuzzy_kgram", fuzzy_split[1])
             #search = commands.getoutput("curl http://localhost:8983/solr/kgram/select?q=*"+fuzzy_split[1]+"*&wt=json&indent=true")
             #print search
         elif "smc" in str(i):
@@ -118,7 +118,7 @@ for i in tmp:
             smc.write("<doc>\n")
             smc.write("<field name=\"filename\">"+fuzzy_split[0]+"</field>\n")
             smc.write("<field name=\"value\">"+fuzzy_split[1]+"</field>\n")
-            fuzzy_serchpy("smc", fuzzy_split[1])
+            fuzzy_serchpy("fuzzy_smc", fuzzy_split[1])
             #search = commands.getoutput("curl http://localhost:8983/solr/smc/select?q=*"+fuzzy_split[1]+"*&wt=json&indent=true")
             #print search
         elif "uc" in str(i):
@@ -126,7 +126,7 @@ for i in tmp:
             uc.write("<doc>\n")
             uc.write("<field name=\"filename\">"+fuzzy_split[0]+"</field>\n")
             uc.write("<field name=\"value\">"+fuzzy_split[1]+"</field>\n")
-            fuzzy_serchpy("uc", fuzzy_split[1])
+            fuzzy_serchpy("fuzzy_uc", fuzzy_split[1])
             #search = commands.getoutput("curl http://localhost:8983/solr/uc/select?q=*"+fuzzy_split[1]+"*&wt=json&indent=true")
             #print search
         elif "wsp" in str(i):
@@ -134,7 +134,7 @@ for i in tmp:
             wsp.write("<doc>\n")
             wsp.write("<field name=\"filename\">"+fuzzy_split[0]+"</field>\n")
             wsp.write("<field name=\"value\">"+fuzzy_split[1]+"</field>\n")
-            fuzzy_serchpy("wsp", fuzzy_split[1])
+            fuzzy_serchpy("fuzzy_wsp", fuzzy_split[1])
             #search = commands.getoutput("curl http://localhost:8983/solr/wsp/select?q=*"+fuzzy_split[1]+"*&wt=json&indent=true")
             #print search
 cvfv.write("</doc>\n")
