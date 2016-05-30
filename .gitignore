@@ -1,7 +1,6 @@
 tmp/*
-barthmark/*.csv
-barthmark/*.xml
-barthmark/*.jar
+birthmark/*
+!birthmark/*.py
 stigmata/*
 stigmata
 jar/*.jar

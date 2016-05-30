@@ -44,9 +44,11 @@ def solr_serchpy(classname,birthmark, quely):
         for filename,place,barthmark in [(filename,place,barthmark) for filename in hit['filename'] for place in hit['place'] for barthmark in hit['barthmark']]:
             birth_class = place.split("!")
             place = birth_class[0].split(":")
+            birth_kind = barthmark.split("_")
             os.system("cp "+place[2]+" .")
             os.system("jar xf "+os.path.basename(place[2])+" "+birth_class[1][1:])
-            output = commands.getoutput("java -jar ~/barthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+barthmark+" compare "+filename+" "+classname+" > "+filename+"-"+classname+"compare.csv")
+
+            output = commands.getoutput("java -jar ~/barthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[1]+" compare ~/birthmark_server/birthmark"+birth_class+" ~/birthmark_server/birthmark"+classname+" > "+birth_class+"-"+classname+"compare.csv")
             print
             print output
             print
