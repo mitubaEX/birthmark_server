@@ -18,7 +18,7 @@ def do_upload():
     if os.path.isdir("./tmp") == False:
         os.mkdir("./tmp")
     upload.save("./tmp",overwrite=True)
-    os.chdir("./barthmark")
+    os.chdir("./birthmark")
     os.system("rm *.csv")
     for tmp in barthmark_kind:
         os.system("java -jar ../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+tmp+" extract ../tmp/"+upload.filename+" > ./"+upload.filename+"-"+tmp+".csv")
