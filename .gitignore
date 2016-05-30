@@ -1,5 +1,13 @@
 tmp/*
 barthmark/*.csv
 barthmark/*.xml
+barthmark/*.jar
 stigmata/*
 stigmata
+jar/*.jar
+jar/fuzzy/*.csv
+jar/fuzzy/*.dat
+jar/fuzzy/fuzzy_csv/*.csv
+jar/fuzzy/fuzzy_csv/*.xml
+jar/barthmark/*
+!jar/barthmark/*.py
