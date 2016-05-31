@@ -23,7 +23,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
 
 
 tmp = glob.glob("*.csv")
-print "fuzzy"
+print "fuzzy_start"
 for i in tmp:
     reader = open(i).read().split("\n")
     for row in reader:
