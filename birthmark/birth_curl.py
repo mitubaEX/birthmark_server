@@ -7,6 +7,14 @@ import os
 import time
 all_time = 0.0
 
+# cvfv = codecs.open("birth_search_cvfv.csv","w",'utf-8')
+# fmc = codecs.open("birth_search_fmc.csv","w",'utf-8')
+# fuc = codecs.open("birth_search_fuc.csv","w",'utf-8')
+# kgram = codecs.open("birth_search_kgram.xml","w",'utf-8')
+# smc = codecs.open("birth_search_smc.xml","w",'utf-8')
+# uc = codecs.open("birth_search_uc.xml","w",'utf-8')
+# wsp = codecs.open("birth_search_wsp.xml","w",'utf-8')
+
 def solr_curl(classname,birthmark, quely):
     start = time.time()
     quely = quely.replace("[","").replace("]","").replace("/","%2").replace(";=", "%3B%253D").replace("(","\(").replace(")","\)").replace(" ", "")
@@ -29,18 +37,18 @@ def solr_serchpy(classname,birthmark, quely):
             birth_class = place.split("!")
             place = birth_class[0].split(":")
             birth_kind = barthmark.split("_")
-            os.system("cp "+place[2]+" .")
-            os.system("jar xf "+os.path.basename(place[2])+" "+birth_class[1][1:])
-            print
-            print birth_class[1]
-            print classname
-            print
-            print
-            print
-            print
+            #os.system("cp "+place[2]+" .")
+            #os.system("jar xf "+os.path.basename(place[2])+" "+birth_class[1][1:])
+            # print
+            # print birth_class[1]
+            # print classname
+            # print
+            # print
+            # print
+            # print
 
 
-            output = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[0]+" compare ~/birthmark_server/birthmark"+birth_class[1]+" ~/birthmark_server/birthmark"+classname+" > "+birth_class[1].replace("/","_")+"-"+classname.replace("/","_")+"compare.csv")
+            output = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[0]+" compare ~/birthmark_server/birthmark/class_list/"+os.path.basename(birth_class[1])+" ~/birthmark_server/birthmark/class_list/"+os.path.basename(classname)+" > ~/birthmark_server/birthmark/class_list/"+birth_class[1].replace("/","_")+"-"+classname.replace("/","_")+"-"+birth_kind[0]+"-compare.csv")
             print
             print output
             print
@@ -74,7 +82,7 @@ if __name__ == "__main__":
                         print
                         print
                         print
-                        os.system("jar xf "+search_class_[0]+" "+search_class_[1])
+                        #os.system("jar xf "+search_class_[0]+" "+search_class_[1])
                         if "cvfv" in row[2]:
                             solr_serchpy(search_class_[1],"birth_cvfv",str(row[3]))
                         elif "fmc" in row[2]:
