@@ -1,12 +1,16 @@
+*.txt
 tmp/*
 birthmark/*
 !birthmark/*.py
 stigmata/*
 stigmata
 jar/*.jar
+jar/*.csv
 jar/fuzzy/*.csv
 jar/fuzzy/*.dat
 jar/fuzzy/fuzzy_csv/*.csv
 jar/fuzzy/fuzzy_csv/*.xml
 jar/barthmark/*
 !jar/barthmark/*.py
+jar/class_compare/*
+!jar/class_compare/*.py
