@@ -16,3 +16,7 @@ do
     echo $i
 done
 echo "hello"
+python ~/birthmark_server/jar/barthmark/bathmark_xml_create.py
+sh ~/birthmark_server/jar/fuzzy/find_csv_tofuzzy.sh
+python ~/birthmark_server/jar/fuzzy/fuzzy_csv/fuzzy_xml_create.py
+
