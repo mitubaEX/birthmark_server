@@ -1,7 +1,15 @@
 *.txt
+*.class
+*.csv
+*.dat
+*.jar
 tmp/*
-birthmark/*
-!birthmark/*.py
+birthmark/class_list/*.csv
+birthmark/class_list/*.class
+birthmark/*.csv
+birthmark/*.txt
+birthmark/*.class
+birthmark/*.dat
 stigmata/*
 stigmata
 jar/*.jar
