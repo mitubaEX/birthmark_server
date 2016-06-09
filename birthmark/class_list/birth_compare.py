@@ -21,8 +21,6 @@ uc_fault_count = 0
 wsp_fault_count = 0
 
 tmp = glob.glob("*.csv")
-collect_count = 0
-fault_count = 0
 for i in tmp:
     count = 0
     reader = open(i).read().split("\n")
@@ -47,7 +45,6 @@ for i in tmp:
                     elif "wsp" in str(i):
                         wsp_count += 1
                     print i+"   "+compare[2]
-                    # collect_count += 1
                 else:
                     if "cvfv" in str(i):
                         cvfv_fault_count += 1
@@ -63,10 +60,9 @@ for i in tmp:
                         uc_fault_count += 1
                     elif "wsp" in str(i):
                         wsp_fault_count += 1
-                    # fault_count += 1
-# print "collect:"+str(collect_count)
-# print "fault:"+str(fault_count)
 
+print "birth"
+print
 print cvfv_count
 print fmc_count
 print fuc_count

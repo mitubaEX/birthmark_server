@@ -55,7 +55,6 @@ def fuzzy_serchpy(classname, birthmark, quely):
     print "data: "+birthmark
     for hit in response.results:
         print hit['filename'],hit['value']
-        # print type(hit['value']);
         print pydeep.compare(str(quely),str(hit['value'][0]))
         if pydeep.compare(str(quely),str(hit['value'][0])) >= 75:
             if "cvfv" in str(birthmark):
@@ -72,7 +71,6 @@ def fuzzy_serchpy(classname, birthmark, quely):
                 uc_count += 1
             elif "wsp" in str(birthmark):
                 wsp_count += 1
-            # correct_count += 1
         else:
             if "cvfv" in str(birthmark):
                 cvfv_fault_count += 1
@@ -88,16 +86,13 @@ def fuzzy_serchpy(classname, birthmark, quely):
                 uc_fault_count += 1
             elif "wsp" in str(birthmark):
                 wsp_fault_count += 1
-            # fault_count += 1
     elapsed_time = time.time() - start
     global all_time
     all_time += elapsed_time
     print "All_time:"+str(all_time)
     print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
-    # print "correct"
-    # print correct_count
-    # print "fault"
-    # print fault_count
+    print "fuzzy"
+    print
     print cvfv_count
     print fmc_count
     print fuc_count
@@ -123,12 +118,6 @@ for i in tmp:
         for row in reader:
             row.replace("<","&lt;").replace(">","&gt;").replace("&","&amp;").replace("\"","&quot;").replace("\'","&apos;")
             fuzzy_split = row.split(" ")
-            # print
-            # print "fuzzy_split"
-            # print fuzzy_split
-            # print
-            # print
-            #tmp = glob.glob("*.csv")
             if len(fuzzy_split) >= 2:
                 fuzzy_split[1] = fuzzy_split[1].replace('\n',"")
                 if "cvfv" in str(i):

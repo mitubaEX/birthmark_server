@@ -7,27 +7,6 @@ import os
 import time
 all_time = 0.0
 
-# cvfv = codecs.open("birth_search_cvfv.csv","w",'utf-8')
-# fmc = codecs.open("birth_search_fmc.csv","w",'utf-8')
-# fuc = codecs.open("birth_search_fuc.csv","w",'utf-8')
-# kgram = codecs.open("birth_search_kgram.xml","w",'utf-8')
-# smc = codecs.open("birth_search_smc.xml","w",'utf-8')
-# uc = codecs.open("birth_search_uc.xml","w",'utf-8')
-# wsp = codecs.open("birth_search_wsp.xml","w",'utf-8')
-
-def solr_curl(classname,birthmark, quely):
-    start = time.time()
-    quely = quely.replace("[","").replace("]","").replace("/","%2").replace(";=", "%3B%253D").replace("(","\(").replace(")","\)").replace(" ", "")
-    quely = quely.replace("&","\&")
-
-    search = commands.getoutput("curl --globoff http://localhost:8983/solr/"+birthmark+"/select?q="+str(quely)+"&wt=json&indent=true")
-    elapsed_time = time.time() - start
-    global all_time
-    all_time += elapsed_time
-    print "All_time:"+str(all_time)
-    print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
-    print search
-
 def solr_serchpy(classname,birthmark, quely):
     start = time.time()
     con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
@@ -37,17 +16,6 @@ def solr_serchpy(classname,birthmark, quely):
             birth_class = place.split("!")
             place = birth_class[0].split(":")
             birth_kind = barthmark.split("_")
-            #os.system("cp "+place[2]+" .")
-            #os.system("jar xf "+os.path.basename(place[2])+" "+birth_class[1][1:])
-            # print
-            # print birth_class[1]
-            # print classname
-            # print
-            # print
-            # print
-            # print
-
-
             output = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[0]+" compare ~/birthmark_server/birthmark/class_list/"+os.path.basename(birth_class[1])+" ~/birthmark_server/birthmark/class_list/"+os.path.basename(classname)+" > ~/birthmark_server/birthmark/class_list/"+birth_class[1].replace("/","_")+"-"+classname.replace("/","_")+"-"+birth_kind[0]+"-compare.csv")
             print
             print output
@@ -58,15 +26,6 @@ def solr_serchpy(classname,birthmark, quely):
     print "All_time:"+str(all_time)
     print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 
-def solr_search(birthmark, quely):
-    solr = pysolr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
-    results = solr.search(str(quely))
-    print
-    print results.hits
-    print
-    for i in results:
-        for j in i:
-            print i[j]
 
 if __name__ == "__main__":
     tmp = glob.glob("*.csv")
@@ -82,7 +41,6 @@ if __name__ == "__main__":
                         print
                         print
                         print
-                        #os.system("jar xf "+search_class_[0]+" "+search_class_[1])
                         if "cvfv" in row[2]:
                             solr_serchpy(search_class_[1],"birth_cvfv",str(row[3]))
                         elif "fmc" in row[2]:
@@ -100,4 +58,4 @@ if __name__ == "__main__":
 
 
 
-
+    os.system("python ./class_list/birth_compare.py")
