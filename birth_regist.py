@@ -1,34 +1,19 @@
-#!/usr/local/bin/python
-# -*- coding: utf-8 -*-
-
 from bottle import route, run, template, request
-import wget
-import glob
 import os
-# localhost:8080
+import commands
+
 @route('/')
-def title():
-    # views/title.tplを呼ぶ
-    return template('regist')
+def index():
+    return template("regist")
 
+@route('/upload', method='POST')
+def do_upload():
+    barthmark_kind = ["cvfv", "fmc", "fuc", "kgram", "smc", "uc", "wsp"]
+    upload   = request.files.get('upload')
+    name, ext = os.path.splitext(upload.filename)
+    upload.save("./jar",overwrite=True)
+    os.chdir("./jar")
+    os.system("sh find_jar_ext_birth_xml.sh")
+    return template("search")
 
-# localhost:8080/show
-@route('/show', method='GET')
-def men():
-    # GETパラメータの取得(username, men)
-    username = request.query.username
-    men = request.query.men
-    print username
-    # filename = wget.download(username)
-    print men
-    # Controller部 =======================================
-    os.chdir("/Users/nakamurajun/Desktop/jar/")
-    tmp = glob.glob("*.jar")
-    print tmp
-    # View部 =============================================
-    # views/show.tplを呼ぶ
- #   return template('show', name=username, men=menname)
-
-
-# ビルドインサーバの実行
-run(host='localhost', port=8080, debug=True, reloader=True)
+run(host='0.0.0.0', port=8080)
