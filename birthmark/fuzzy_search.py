@@ -52,6 +52,12 @@ def fuzzy_serchpy(classname, birthmark, quely):
     global correct_count
     global fault_count
     response = con.select("\""+str(quely)+"\"")
+    if response is None:
+        fault_count += 1
+        print "none_count:"+str(fault_count)
+    else:
+        correct_count += 1
+        print "is_count:"+str(correct_count)
     print "data: "+birthmark
     for hit in response.results:
         print hit['filename'],hit['value']

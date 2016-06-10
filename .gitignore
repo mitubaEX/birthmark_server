@@ -3,6 +3,7 @@
 *.csv
 *.dat
 *.jar
+*.xml
 tmp/*
 birthmark/class_list/*.csv
 birthmark/class_list/*.class
