@@ -6,11 +6,21 @@ import solr
 import os
 import time
 all_time = 0.0
+none_count = 0
+is_count = 0
 
 def solr_serchpy(classname,birthmark, quely):
+    global none_count
+    global is_count
     start = time.time()
     con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     response = con.select("\""+str(quely)+"\"")
+    if response is None:
+        none_count += 1
+        print "none_count:"+str(none_count)
+    else:
+        is_count += 1
+        print "is_count"+str(is_count)
     for hit in response.results:
         for filename,place,barthmark in [(filename,place,barthmark) for filename in hit['filename'] for place in hit['place'] for barthmark in hit['barthmark']]:
             birth_class = place.split("!")
