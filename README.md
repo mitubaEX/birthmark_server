@@ -11,7 +11,7 @@
   - 同じディレクトリにあるjarファイルを見つけて、barthmark,fuzzyディレクトリにcsvファイルを書く
 - jar/fuzzy/find_csv_tofuzzy.sh
   - csvファイルをファジーハッシュ化してfuzzy_csvに書く
-- jar/fuzzy/fuzz_csvfuzzy_xml_create.py
+- jar/fuzzy/fuzzy_csv/fuzzy_xml_create.py
   - xml作成
-- birthmark/fuzzy_search.py,birth_curl.py
+- birthmark/fuzzy_search.py,birth_search.py
   - 検索用スクリプト
