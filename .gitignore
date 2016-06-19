@@ -1,9 +1,13 @@
+.DS_Store
 *.txt
 *.class
 *.csv
 *.dat
 *.jar
 *.xml
+jar/*
+!jar/*.sh
+!jar/*.py
 tmp/*
 birthmark/class_list/*.csv
 birthmark/class_list/*.class
