@@ -7,6 +7,7 @@ import solr
 all_time = 0
 correct_count = 0
 all_count = 0
+all_hit_count = 0
 birth_correct = [0,0,0,0,0,0,0,0]
 birth_fault = [0,0,0,0,0,0,0,0]
 hit_count = [0,0,0,0,0,0,0,0]
@@ -18,8 +19,14 @@ def solr_serchclass(birthmark, first_class, secound_class):
     global birth_correct
     global birth_fault
     global hit_count
+    global all_hit_count
     start = time.time()
+    print
+    print first_class
+    print
     con = solr.Solr('http://localhost:8983/solr/birth_'+ str(birthmark)+'')
+    if len(str(first_class)) >= 10000:
+        return 0
     response = con.select(str(first_class).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)"))
     if len(response.results) == 0:
         if "cvfv" in birthmark:
@@ -110,11 +117,13 @@ if __name__ == "__main__":
     reader = open(param[1]).read().split("\n")
     count = 0
     for row in reader:
-        if count >= 100:
+        if count >= 500:
             break
         count += 1
+        all_hit_count += 1
         print
         print "all_count"+str(count)
+        print "all_hit_count"+str(all_hit_count)
         print
         class_line = row.split(",")
         if len(class_line) >= 2:

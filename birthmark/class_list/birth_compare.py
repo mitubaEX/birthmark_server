@@ -71,7 +71,7 @@ for i in tmp:
                     elif "wsp" in str(i):
                         middle_count[7] += 1
 
-                else:
+                elif Decimal(str(compare[2])) <= Decimal('0.25'):
                     if "cvfv" in str(i):
                         cvfv_fault_count += 1
                     elif "fmc" in str(i):

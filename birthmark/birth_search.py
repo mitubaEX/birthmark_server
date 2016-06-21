@@ -88,6 +88,14 @@ def solr_serchpy(classname,birthmark, quely):
     for o in hit_count:
         print o
     print
+    print "compare_fault"
+    for k in compare_fault:
+        print k
+    print
+    print "birthmark_count"
+    for n in birthmark_count:
+        print n
+    print
 
     # result_annalysys
     for hit in response.results:
@@ -100,24 +108,36 @@ def solr_serchpy(classname,birthmark, quely):
                 subprocess.call("sh ~/birthmark_server/birthmark/class_list/jar_compare.sh "+birth_kind[1]+" "+os.path.basename(birth_class[1])+" "+os.path.basename(classname),shell=True)
             else:
                 if "cvfv" in birthmark:
+                    birthmark_count[0] -= 1
                     compare_fault[0] += 1
                 if "fmc" in birthmark:
+                    birthmark_count[1] -= 1
                     compare_fault[1] += 1
                 if "fuc" in birthmark:
+                    birthmark_count[2] -= 1
                     compare_fault[2] += 1
                 if "2gram" in birthmark:
+                    birthmark_count[3] -= 1
                     compare_fault[3] += 1
                 if "3gram" in birthmark:
+                    birthmark_count[4] -= 1
                     compare_fault[4] += 1
                 if "smc" in birthmark:
+                    birthmark_count[5] -= 1
                     compare_fault[5] += 1
                 if "uc" in birthmark:
+                    birthmark_count[6] -= 1
                     compare_fault[6] += 1
                 if "wsp" in birthmark:
+                    birthmark_count[7] -= 1
                     compare_fault[7] += 1
                 print "compare_fault"
                 for k in compare_fault:
                     print k
+                print
+                print "birthmark_count"
+                for n in birthmark_count:
+                    print n
                 print
 
                 # compare_fault += 1
