@@ -1,5 +1,5 @@
 
-find . -maxdepth 1 -name "*.jar" |
+find . -name "*.jar" |
 while read -r file;
 do
     echo ${file}

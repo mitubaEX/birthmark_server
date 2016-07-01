@@ -57,14 +57,15 @@ def fuzzy_serchpy(classname, birthmark, quely):
     start = time.time()
     con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     quely = pydeep.hash_buf(str(quely))
-    print
-    print "classname: "+classname
-    print "quely: "+quely.replace("\)",")").replace("\(","(")
-    print
+    # print
+    # print "classname: "+classname
+    # print "quely: "+quely.replace("\)",")").replace("\(","(")
+    # print
     global correct_count
     global fault_count
     global search_count
-    response = con.select(str(quely.replace("[","\[").replace("]","\]").replace(":","\:")))
+    response = con.select('value:'+str(quely.replace("[","\[").replace("]","\]").replace(":","\:")),rows=1)
+    # response = con.select("strdist("+str(quely.replace("[","\[").replace("]","\]").replace(":","\:"))+",text,edit)",rows=response.numFound)
 
     if len(response.results) == 0:
         if "cvfv" in str(birthmark):
@@ -126,19 +127,20 @@ def fuzzy_serchpy(classname, birthmark, quely):
     print "hit_count"
     for o in hit_count:
         print o
-    print "data: "+birthmark
+    # print "data: "+birthmark
 
 
 
 
-    # result_annalysys
+    # # result_annalysys
     for hit in response.results:
-        print hit['filename'],hit['value']
+        # print hit['filename'],hit['value']
+        # print hit['score']
         #print pydeep.compare(str(quely),str(hit['value'][0]))
         distance = editdistance.eval(str(quely),str(hit['value']))
         length = max(len(str(quely)), len(str(hit['value'])))
         ans = 1.0 - float(distance) / length
-        print "ans:  "+str(ans)
+        print "ans:  "+str(ans) + " score: "+str(hit['score'])
         if Decimal(str(ans)) >= Decimal('0.75'):
             if "cvfv" in str(birthmark):
                 cvfv_count += 1
@@ -195,31 +197,31 @@ def fuzzy_serchpy(classname, birthmark, quely):
     all_time += elapsed_time
     print "All_time:"+str(all_time)
     print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
-    print "fuzzy 0.75"
-    print
-    print cvfv_count
-    print fmc_count
-    print fuc_count
-    print _2gram_count
-    print _3gram_count
-    print smc_count
-    print uc_count
-    print wsp_count
-    print
-    print "fuzzy 0.75-0.25"
-    for l in middle_count:
-        print l
-    print
-    print "fuzzy 0.25"
-    print
-    print cvfv_fault_count
-    print fmc_fault_count
-    print fuc_fault_count
-    print _2gram_fault_count
-    print _3gram_fault_count
-    print smc_fault_count
-    print uc_fault_count
-    print wsp_fault_count
+    # print "fuzzy 0.75"
+    # print
+    # print cvfv_count
+    # print fmc_count
+    # print fuc_count
+    # print _2gram_count
+    # print _3gram_count
+    # print smc_count
+    # print uc_count
+    # print wsp_count
+    # print
+    # print "fuzzy 0.75-0.25"
+    # for l in middle_count:
+    #     print l
+    # print
+    # print "fuzzy 0.25"
+    # print
+    # print cvfv_fault_count
+    # print fmc_fault_count
+    # print fuc_fault_count
+    # print _2gram_fault_count
+    # print _3gram_fault_count
+    # print smc_fault_count
+    # print uc_fault_count
+    # print wsp_fault_count
 
 
 
@@ -231,13 +233,13 @@ for i in tmp:
     if "jar" in str(i):
         reader = open(i).read().split("\n")
         for row in reader:
-            print "row:"+row
+            # print "row:"+row
             row.replace("<","&lt;").replace(">","&gt;").replace("&","&amp;").replace("\"","&quot;").replace("\'","&apos;")
             fuzzy_split = row.split(",",3)
             if len(fuzzy_split) >= 4:
                 class_name = fuzzy_split[1].split("!")
-                print "search_class"
-                print fuzzy_split[3]
+                # print "search_class"
+                # print fuzzy_split[3]
                 if "cvfv" in str(i):
                     fuzzy_serchpy(os.path.basename(class_name[1]), "fuzzy_cvfv", fuzzy_split[3])
                 elif "fmc" in str(i):
