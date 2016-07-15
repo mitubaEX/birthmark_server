@@ -4,6 +4,8 @@ import os
 import commands
 import time
 import solr
+import urllib,json
+from decimal import *
 all_time = 0
 correct_count = 0
 all_count = 0
@@ -28,74 +30,99 @@ def solr_serchclass(birthmark, first_class, secound_class):
     print
     con = solr.Solr('http://localhost:8983/solr/birth_'+ str(birthmark)+'')
     if len(str(first_class)) <=5000:
-        response = con.select("strdist("+str(first_class).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")+",text,edit)")
-        if len(response.results) == 0:
-            if "cvfv" in birthmark:
-                birth_correct[0] += 1
-            elif "fmc" in birthmark:
-                birth_fault[1] += 1
-            elif "fuc" in birthmark:
-                birth_fault[2] += 1
-            elif "2gram" in birthmark:
-                birth_fault[3] += 1
-            elif "3gram" in birthmark:
-                birth_fault[4] += 1
-            elif "smc" in birthmark:
-                birth_fault[5] += 1
-            elif "uc" in birthmark:
-                birth_fault[6] += 1
-            elif "wsp" in birthmark:
-                birth_fault[7] += 1
-        else:
-            if "cvfv" in birthmark:
-                birth_correct[0] += len(response.results)
-                hit_count[0] += 1
-            elif "fmc" in birthmark:
-                birth_correct[1] += len(response.results)
-                hit_count[1] += 1
-            elif "fuc" in birthmark:
-                birth_correct[2] += len(response.results)
-                hit_count[2] += 1
-            elif "2gram" in birthmark:
-                birth_correct[3] += len(response.results)
-                hit_count[3] += 1
-            elif "3gram" in birthmark:
-                birth_correct[4] += len(response.results)
-                hit_count[4] += 1
-            elif "smc" in birthmark:
-                birth_correct[5] += len(response.results)
-                hit_count[5] += 1
-            elif "uc" in birthmark:
-                birth_correct[6] += len(response.results)
-                hit_count[6] += 1
-            elif "wsp" in birthmark:
-                birth_correct[7] += len(response.results)
-                hit_count[7] += 1
-        print
-        print "birth_correct"
-        for n in birth_correct:
-            print n
-        print
-        print "birth_fault"
-        for m in birth_fault:
-            print m
-        print
-        print "hit_count"
-        for o in hit_count:
-            print o
-        print
-        for hit in response.results:
-            for filename,place,barthmark in [(filename,place,barthmark) for filename in hit['filename'] for place in hit['place'] for barthmark in hit['barthmark']]:
-                birth_class = place.split("!")
+        quely_tmp = first_class
+        quely = str(first_class).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
+        url_mae = "http://localhost:8983/solr/birth_"+ str(birthmark)+"/select?q="
+        url_query = urllib.quote_plus(str(quely))
+        url_query_tmp = urllib.quote_plus(str(quely_tmp))
+        sort_ = urllib.quote_plus("strdist(data,"+str(quely)+",edit) desc")
+        fl_ = urllib.quote_plus("*,data,score,lev:strdist(data,"+str(quely)+",edit)")
+        url = url_mae+url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+
+        # response = con.select("strdist("+str(first_class).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")+",text,edit)")
+        res = urllib.urlopen(str(url))
+        # print res.read()
+        tmp_res = res.read()
+        if tmp_res is not None and tmp_res:
+            # print tmp_res
+            response = eval(tmp_res)
+            url = url_mae+url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&"+ str(response['response']['numFound'])+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+            res = urllib.urlopen(str(url))
+            # print res.read()
+            tmp_res = res.read()
+
+            response = eval(tmp_res)
+            results = response['response']['docs']
+            if len(results) == 0:
+                if "cvfv" in birthmark:
+                    birth_correct[0] += 1
+                elif "fmc" in birthmark:
+                    birth_fault[1] += 1
+                elif "fuc" in birthmark:
+                    birth_fault[2] += 1
+                elif "2gram" in birthmark:
+                    birth_fault[3] += 1
+                elif "3gram" in birthmark:
+                    birth_fault[4] += 1
+                elif "smc" in birthmark:
+                    birth_fault[5] += 1
+                elif "uc" in birthmark:
+                    birth_fault[6] += 1
+                elif "wsp" in birthmark:
+                    birth_fault[7] += 1
+            else:
+                if "cvfv" in birthmark:
+                    birth_correct[0] += len(results)
+                    hit_count[0] += 1
+                elif "fmc" in birthmark:
+                    birth_correct[1] += len(results)
+                    hit_count[1] += 1
+                elif "fuc" in birthmark:
+                    birth_correct[2] += len(results)
+                    hit_count[2] += 1
+                elif "2gram" in birthmark:
+                    birth_correct[3] += len(results)
+                    hit_count[3] += 1
+                elif "3gram" in birthmark:
+                    birth_correct[4] += len(results)
+                    hit_count[4] += 1
+                elif "smc" in birthmark:
+                    birth_correct[5] += len(results)
+                    hit_count[5] += 1
+                elif "uc" in birthmark:
+                    birth_correct[6] += len(results)
+                    hit_count[6] += 1
+                elif "wsp" in birthmark:
+                    birth_correct[7] += len(results)
+                    hit_count[7] += 1
+            print
+            print "birth_correct"
+            for n in birth_correct:
+                print n
+            print
+            print "birth_fault"
+            for m in birth_fault:
+                print m
+            print
+            print "hit_count"
+            for o in hit_count:
+                print o
+            print
+            # print results
+            for hit in results:
+                if Decimal(str(hit['lev'])) < Decimal(0.75):
+                    break
+                # for filename,place,barthmark in [(filename,place,barthmark) for filename in hit['filename'] for place in hit['place'] for barthmark in hit['barthmark']]:
+                birth_class = hit['place'].split("!")
                 place = birth_class[0].split(":")
-                birth_kind = barthmark.split("_")
+                birth_kind = hit['barthmark'].split("_")
                 #os.system("cp "+place[2]+" .")
                 #os.system("jar xf "+os.path.basename(place[2])+" "+birth_class[1][1:])
                 print
                 print os.path.basename(birth_class[1]).replace(".class","")
                 # print first_class
                 print secound_class
-                print
+                print hit['lev']
                 print
                 print
                 print
@@ -104,6 +131,7 @@ def solr_serchclass(birthmark, first_class, secound_class):
                     print
                     print "correct_count: "+str(correct_count)
                     print
+                    break
     else:
         if "cvfv" in birthmark:
             birth_correct[0] += 1

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-find . -name "*.csv" |
+find . -maxdepth 1 -name "*.csv" |
 while read -r file;
 do
     echo ${file}
@@ -8,6 +8,7 @@ do
     echo $abs
     filename=`basename ${file}`
     echo "fuzzy-$filename"
-    python ~/yamamoto15scis/prog/fuzzyhashing.py -b "$abs/$filename" > "fuzzy_csv/fuzzy-$filename" ;
+    # cd ~/birthmark_server/jar/fuzzy
+    python ~/yamamoto15scis/prog/fuzzyhashing.py "$abs/$filename" > "fuzzy_csv/fuzzy-$filename" ;
 done
 echo "hello"

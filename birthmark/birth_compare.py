@@ -26,7 +26,7 @@ smc_fault_count = 0
 uc_fault_count = 0
 wsp_fault_count = 0
 
-tmp = glob.glob("*.csv")
+tmp = glob.glob("class_list/*.csv")
 for i in tmp:
     tmpnum = 2
     count = 0

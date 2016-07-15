@@ -18,6 +18,7 @@ def do_upload():
         os.system("java -jar ../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+tmp+" extract ../jar/"+upload.filename+" > ./"+upload.filename+"-"+tmp+".csv")
     os.system("python birth_search.py")
     os.system("python fuzzy_search.py")
+    os.system("python fuzzy_nob_search.py")
     redirect("/")
     return template("search")
 

@@ -48,7 +48,7 @@ for i in tmp:
             for index,l in enumerate(compare):
                 print "error:"+str(l)
                 if l and math.isnan(float(l)) is False:
-                    if Decimal(str(l)) >= Decimal('0.75') and classname != class_line[index + 1]:
+                    if Decimal(str(l)) >= Decimal('0.75'):
                         print "l: "+str(l)
                         print
                         if birthmark == "cvfv":
