@@ -269,12 +269,12 @@ def fuzzy_serchpy(classname, birthmark, quely):
 
 
 
-tmp = glob.glob("*.csv")
+tmp = glob.glob("./data/birthmark/*.csv")
 # print tmp
 print "fuzzy_start"
 for i in tmp:
     if "jar" in str(i):
-        reader = commands.getoutput("python ~/yamamoto15scis/prog/fuzzyhashing.py -b "+i).split("\n");
+        reader = commands.getoutput("python ./yamamoto15scis/prog/fuzzyhashing.py -b "+i).split("\n");
         # reader = open(i).read().split("\n")
         for row in reader:
             # print "row:"+row

@@ -8,6 +8,7 @@ import time
 import subprocess
 from decimal import *
 import urllib,json
+import sys
 
 all_time = 0.0
 none_count = 0
@@ -205,33 +206,33 @@ def solr_serchpy(classname,birthmark, quely):
 
 
 if __name__ == "__main__":
-    tmp = glob.glob("*.csv")
-    for i in tmp:
-         reader = open(i).read().split("\n")
-         if '\0' not in open(i).read():
-            if reader is not None:
-                for row in reader:
-                    row = row.split(",",3)
-                    if len(row) >= 4:
-                        # print "hello:"+str(row[3])
-                        search_class = row[1].split(":")
-                        search_class_ = search_class[2].split("!")
-                        if "cvfv" in row[2]:
-                            solr_serchpy(search_class_[1],"birth_cvfv",str(row[3]))
-                        elif "fmc" in row[2]:
-                            solr_serchpy(search_class_[1],"birth_fmc",str(row[3]))
-                        elif "fuc" in row[2]:
-                            solr_serchpy(search_class_[1],"birth_fuc",str(row[3]))
-                        elif "2gram" in str(i):
-                            solr_serchpy(search_class_[1],"birth_2gram",str(row[3]))
-                        elif "3gram" in str(i):
-                            solr_serchpy(search_class_[1],"birth_3gram",str(row[3]))
-                        elif "smc" in row[2]:
-                            solr_serchpy(search_class_[1],"birth_smc",str(row[3]))
-                        elif "uc" in row[2]:
-                            solr_serchpy(search_class_[1],"birth_uc",str(row[3]))
-                        elif "wsp" in row[2]:
-                            solr_serchpy(search_class_[1],"birth_wsp",str(row[3]))
+    i = sys.argv[1]
+    #tmp = glob.glob("*.csv")
+    reader = open(i).read().split("\n")
+     if '\0' not in open(i).read():
+         if reader is not None:
+             for row in reader:
+                 row = row.split(",",3)
+                if len(row) >= 4:
+                    # print "hello:"+str(row[3])
+                    search_class = row[1].split(":")
+                    search_class_ = search_class[2].split("!")
+                    if "cvfv" in row[2]:
+                        solr_serchpy(search_class_[1],"birth_cvfv",str(row[3]))
+                    elif "fmc" in row[2]:
+                        solr_serchpy(search_class_[1],"birth_fmc",str(row[3]))
+                    elif "fuc" in row[2]:
+                        solr_serchpy(search_class_[1],"birth_fuc",str(row[3]))
+                    elif "2gram" in str(i):
+                        solr_serchpy(search_class_[1],"birth_2gram",str(row[3]))
+                    elif "3gram" in str(i):
+                        solr_serchpy(search_class_[1],"birth_3gram",str(row[3]))
+                    elif "smc" in row[2]:
+                        solr_serchpy(search_class_[1],"birth_smc",str(row[3]))
+                    elif "uc" in row[2]:
+                        solr_serchpy(search_class_[1],"birth_uc",str(row[3]))
+                    elif "wsp" in row[2]:
+                        solr_serchpy(search_class_[1],"birth_wsp",str(row[3]))
 
 
 

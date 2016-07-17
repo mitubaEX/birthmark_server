@@ -189,7 +189,7 @@ def solr_serchpy(classname,birthmark, quely):
 
 
 if __name__ == "__main__":
-    tmp = glob.glob("*.csv")
+    tmp = glob.glob("./birthmark/*.csv")
     for i in tmp:
          reader = open(i).read().split("\n")
          if '\0' not in open(i).read():
@@ -219,6 +219,3 @@ if __name__ == "__main__":
                         break
 
 
-
-    # os.chdir("/Users/mituba/birthmark_server/birthmark/class_list/")
-    # os.system("python ~/birthmark_server/birthmark/class_list/birth_compare.py")

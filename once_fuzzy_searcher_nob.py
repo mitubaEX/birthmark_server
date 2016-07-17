@@ -30,7 +30,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
     print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 
 
-tmp = glob.glob("*.csv")
+tmp = glob.glob("./birthmark/*.csv")
 # print tmp
 print "fuzzy_start"
 for i in tmp:

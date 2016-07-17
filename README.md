@@ -6,12 +6,13 @@
 ```python birth_searcher.py```
 で実行
 
-## スクリプトの役割
-- jar/find_jar.sh
-  - 同じディレクトリにあるjarファイルを見つけて、barthmark,fuzzyディレクトリにcsvファイルを書く
-- jar/fuzzy/find_csv_tofuzzy.sh
-  - csvファイルをファジーハッシュ化してfuzzy_csvに書く
-- jar/fuzzy/fuzzy_csv/fuzzy_xml_create.py
-  - xml作成
-- birthmark/fuzzy_search.py,birth_search.py
-  - 検索用スクリプト
+## 各ディレクトリの役割
+- data/jar: 全てのjarファイルの置き場
+- data/birthmark: 全てのバースマークの置き場
+- data/fuzzy: 全てのバースマークをfuzzy_hash化したものの置き場
+- data/fuzzy_nob: 全てのバースマークをfuzzy_hash化(-bなし）したものの置き場
+- data/class_list: クラスファイルの置き場
+- data/birth_xml: 全てのバースマークのxmlの置き場
+- data/fuzzy_xml: 全てのfuzzyのxmlの置き場
+- data/fuzzy_nob_xml: 全てのfuzzy(-bなし)のxmlの置き場
+- data/class_compare: stigmataの0.75位上のクラスをいろいろする
