@@ -5,6 +5,7 @@
 *.dat
 *.jar
 *.xml
+stigmata
 data/*
 !data/birth_xml
 !data/birthmark

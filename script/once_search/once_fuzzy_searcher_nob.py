@@ -1,4 +1,5 @@
 import os
+import sys
 import glob
 import commands
 import codecs
@@ -30,9 +31,11 @@ def fuzzy_serchpy(classname, birthmark, quely):
     print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 
 
-tmp = glob.glob("./birthmark/*.csv")
+# tmp = glob.glob("./birthmark/*.csv")
 # print tmp
 print "fuzzy_start"
+tmp = sys.argv
+del tmp[0]
 for i in tmp:
     if "jar" in str(i):
         reader = commands.getoutput("python ~/yamamoto15scis/prog/fuzzyhashing.py -b "+i).split("\n");

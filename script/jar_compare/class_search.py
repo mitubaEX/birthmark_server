@@ -1,3 +1,4 @@
+#class_list_csv -> input correct_count -> output
 import sys
 import codecs
 import os

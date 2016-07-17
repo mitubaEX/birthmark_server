@@ -1,3 +1,4 @@
+# birthmark search hit_count -> output
 import glob
 import commands
 import csv
@@ -151,15 +152,15 @@ def solr_serchpy(classname,birthmark, quely):
                     print birth_class[1]
                     print classname
                     if "CharUtils" not in os.path.basename(birth_class[1]) and "CharUtils" not in os.path.basename(classname):
-                        subprocess.call("sh ~/birthmark_server/birthmark/class_list/jar_compare.sh "+birth_kind[1]+" "+os.path.basename(birth_class[1])+" "+os.path.basename(classname)+" "+str(hit['lev']),shell=True)
+                        subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" "+os.path.basename(birth_class[1])+" "+os.path.basename(classname)+" "+str(hit['lev']),shell=True)
                     elif "CharUtils" in os.path.basename(birth_class[1]):
                         print "query"
                         print os.path.basename(birth_class[1]),os.path.basename(classname)
-                        subprocess.call("sh ~/birthmark_server/birthmark/class_list/jar_compare.sh "+birth_kind[1]+" "+os.path.basename(birth_class[1])+" CharUtils.class"+" "+str(hit['lev']),shell=True)
+                        subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" "+os.path.basename(birth_class[1])+" CharUtils.class"+" "+str(hit['lev']),shell=True)
                     elif "CharUtils" in os.path.basename(classname):
                         print "query"
                         print os.path.basename(birth_class[1]),os.path.basename(classname)
-                        subprocess.call("sh ~/birthmark_server/birthmark/class_list/jar_compare.sh "+birth_kind[1]+" "+"CharUtils.class "+os.path.basename(classname)+" "+str(hit['lev']),shell=True)
+                        subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" "+"CharUtils.class "+os.path.basename(classname)+" "+str(hit['lev']),shell=True)
                     else:
                     # if(count >= 1):
                     #     break
@@ -206,35 +207,36 @@ def solr_serchpy(classname,birthmark, quely):
 
 
 if __name__ == "__main__":
-    i = sys.argv[1]
+    args = sys.argv
+    del args[0]
+    print args
     #tmp = glob.glob("*.csv")
-    reader = open(i).read().split("\n")
-     if '\0' not in open(i).read():
-         if reader is not None:
-             for row in reader:
-                 row = row.split(",",3)
-                if len(row) >= 4:
-                    # print "hello:"+str(row[3])
-                    search_class = row[1].split(":")
-                    search_class_ = search_class[2].split("!")
-                    if "cvfv" in row[2]:
-                        solr_serchpy(search_class_[1],"birth_cvfv",str(row[3]))
-                    elif "fmc" in row[2]:
-                        solr_serchpy(search_class_[1],"birth_fmc",str(row[3]))
-                    elif "fuc" in row[2]:
-                        solr_serchpy(search_class_[1],"birth_fuc",str(row[3]))
-                    elif "2gram" in str(i):
-                        solr_serchpy(search_class_[1],"birth_2gram",str(row[3]))
-                    elif "3gram" in str(i):
-                        solr_serchpy(search_class_[1],"birth_3gram",str(row[3]))
-                    elif "smc" in row[2]:
-                        solr_serchpy(search_class_[1],"birth_smc",str(row[3]))
-                    elif "uc" in row[2]:
-                        solr_serchpy(search_class_[1],"birth_uc",str(row[3]))
-                    elif "wsp" in row[2]:
-                        solr_serchpy(search_class_[1],"birth_wsp",str(row[3]))
+    for i in args:
+        reader = open(i).read().split("\n")
+        if '\0' not in open(i).read():
+            if reader is not None:
+                for row in reader:
+                    row = row.split(",",3)
+                    if len(row) >= 4:
+                        # print "hello:"+str(row[3])
+                        search_class = row[1].split(":")
+                        search_class_ = search_class[2].split("!")
+                        if "cvfv" in row[2]:
+                            solr_serchpy(search_class_[1],"birth_cvfv",str(row[3]))
+                        elif "fmc" in row[2]:
+                            solr_serchpy(search_class_[1],"birth_fmc",str(row[3]))
+                        elif "fuc" in row[2]:
+                            solr_serchpy(search_class_[1],"birth_fuc",str(row[3]))
+                        elif "2gram" in str(i):
+                            solr_serchpy(search_class_[1],"birth_2gram",str(row[3]))
+                        elif "3gram" in str(i):
+                            solr_serchpy(search_class_[1],"birth_3gram",str(row[3]))
+                        elif "smc" in row[2]:
+                            solr_serchpy(search_class_[1],"birth_smc",str(row[3]))
+                        elif "uc" in row[2]:
+                            solr_serchpy(search_class_[1],"birth_uc",str(row[3]))
+                        elif "wsp" in row[2]:
+                            solr_serchpy(search_class_[1],"birth_wsp",str(row[3]))
 
 
 
-    os.chdir("/Users/mituba/birthmark_server/birthmark/class_list/")
-    os.system("python ~/birthmark_server/birthmark/birth_compare.py")

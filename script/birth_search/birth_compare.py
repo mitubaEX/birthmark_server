@@ -1,9 +1,11 @@
+# stigmata_similarity levenshtein birthmark_kind -> output
 import os
 import glob
 import commands
 import codecs
 import os
 from decimal import *
+import sys
 import math
 # cvfv fmc fuc kgram smc uc wsp
 middle_count = [0,0,0,0,0,0,0,0]
@@ -26,8 +28,9 @@ smc_fault_count = 0
 uc_fault_count = 0
 wsp_fault_count = 0
 
-tmp = glob.glob("class_list/*.csv")
-for i in tmp:
+args = sys.argv
+del args[0]
+for i in args:
     tmpnum = 2
     count = 0
     reader = open(i).read().split("\n")

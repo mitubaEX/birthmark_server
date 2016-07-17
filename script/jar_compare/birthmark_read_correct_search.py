@@ -1,3 +1,4 @@
+# 0.75 class group -> output
 import os
 import glob
 import commands

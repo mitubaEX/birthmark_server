@@ -1,4 +1,5 @@
 import os
+import sys
 import glob
 import commands
 import codecs
@@ -62,7 +63,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
     global fuzzy_birth
     # start
     start = time.time()
-    # con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'_nob')
+    con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     # print str(quely)
     # quely = pydeep.hash_buf(str(quely))
     quely_tmp = quely
@@ -82,7 +83,6 @@ def fuzzy_serchpy(classname, birthmark, quely):
     sort_ = urllib.quote_plus("strdist(value,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,value,score,lev:strdist(value,"+str(quely)+",edit)")
     url = url_mae+url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-    # print url
     # print birthmark
     # print 'value:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
 # q='data:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)"),fields='*,data,lev:strdist(data,\"'+str(quely)+'\",edit)',sort_order='strdist(data,\"'+str(quely)+'\",edit) desc',rows=1
@@ -91,7 +91,9 @@ def fuzzy_serchpy(classname, birthmark, quely):
 
     res = urllib.urlopen(str(url))
     response = eval(res.read())
-    print response
+    url = url_mae+url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows="+str(response['response']['numFound'])+"&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+    res = urllib.urlopen(str(url))
+    response = eval(res.read())
     # print response
     results = response['response']['docs']
     # print len(results)
@@ -161,6 +163,8 @@ def fuzzy_serchpy(classname, birthmark, quely):
     count = 0
     # # result_annalysys
     for hit in results:
+        if Decimal(hit['lev']) < Decimal('0.75'):
+            break
         # print hit['filename'],hit['value']
         # print hit['score']
         #print pydeep.compare(str(quely),str(hit['value'][0]))
@@ -266,12 +270,14 @@ def fuzzy_serchpy(classname, birthmark, quely):
 
 
 
-tmp = glob.glob("*.csv")
+# tmp = glob.glob("./data/birthmark/*.csv")
 # print tmp
 print "fuzzy_start"
+tmp = sys.argv
+del tmp[0]
 for i in tmp:
     if "jar" in str(i):
-        reader = commands.getoutput("python ~/yamamoto15scis/prog/fuzzyhashing.py "+i).split("\n");
+        reader = commands.getoutput("python ./yamamoto15scis/prog/fuzzyhashing.py -b "+i).split("\n");
         # reader = open(i).read().split("\n")
         for row in reader:
             # print "row:"+row
@@ -282,18 +288,18 @@ for i in tmp:
                 # print "search_class"
                 # print fuzzy_split[3]
                 if "cvfv" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]), "fuzzy_cvfv_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]), "fuzzy_cvfv", fuzzy_split[1])
                 elif "fmc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_fmc_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_fmc", fuzzy_split[1])
                 elif "fuc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_fuc_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_fuc", fuzzy_split[1])
                 elif "2gram" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_2gram_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_2gram", fuzzy_split[1])
                 elif "3gram" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_3gram_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_3gram", fuzzy_split[1])
                 elif "smc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_smc_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_smc", fuzzy_split[1])
                 elif "uc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_uc_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_uc", fuzzy_split[1])
                 elif "wsp" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_wsp_nob", fuzzy_split[1])
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_wsp", fuzzy_split[1])

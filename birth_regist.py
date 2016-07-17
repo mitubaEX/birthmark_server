@@ -13,7 +13,7 @@ def do_upload():
     name, ext = os.path.splitext(upload.filename)
     upload.save("./jar",overwrite=True)
     os.chdir("./jar")
-    os.system("sh find_jar_ext_birth_xml.sh")
+    os.system("bash find_jar_ext_birth_xml.sh")
     return template("search")
 
 run(host='0.0.0.0', port=8080)

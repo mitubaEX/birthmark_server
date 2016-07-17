@@ -1,3 +1,4 @@
+# one class from all_jar
 echo $1
 find . -maxdepth 1 -name "*.jar" |
 while read -r file;

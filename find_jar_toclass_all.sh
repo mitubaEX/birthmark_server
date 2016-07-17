@@ -1,4 +1,5 @@
-
+# extract class from all_jar
+cd ./data/jar/
 find . -name "*.jar" |
 while read -r file;
 do
@@ -16,6 +17,6 @@ do
     abs=$(cd $(dirname ${file});pwd)
     echo $abs
     filename=`basename ${file}`
-    cp "$abs/$filename" ~/birthmark_server/birthmark/class_list/${filename//\$/}
+    cp "$abs/$filename" ./${filename//\$/}
 done
 

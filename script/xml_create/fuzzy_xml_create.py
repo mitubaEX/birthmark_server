@@ -2,16 +2,17 @@ import os
 import glob
 import commands
 import codecs
+import sys
 
-cvfv = codecs.open("./data/fuzzy_xml/zcvfv.xml","w",'utf-8')
-fmc = codecs.open("./data/fuzzy_xml/zfmc.xml","w",'utf-8')
-fuc = codecs.open("./data/fuzzy_xml/zfuc.xml","w",'utf-8')
-smc = codecs.open("./data/fuzzy_xml/zsmc.xml","w",'utf-8')
-uc = codecs.open("./data/fuzzy_xml/zuc.xml","w",'utf-8')
-wsp = codecs.open("./data/fuzzy_xml/zwsp.xml","w",'utf-8')
-_2gram = codecs.open("./data/fuzzy_xml/z2gram.xml","w",'utf-8')
-_3gram = codecs.open("./data/fuzzy_xml/z3gram.xml","w",'utf-8')
-_5gram = codecs.open("./data/fuzzy_xml/z5gram.xml","w",'utf-8')
+cvfv = codecs.open("../../data/fuzzy_xml/zcvfv.xml","w",'utf-8')
+fmc = codecs.open("../../data/fuzzy_xml/zfmc.xml","w",'utf-8')
+fuc = codecs.open("../../data/fuzzy_xml/zfuc.xml","w",'utf-8')
+smc = codecs.open("../../data/fuzzy_xml/zsmc.xml","w",'utf-8')
+uc = codecs.open("../../data/fuzzy_xml/zuc.xml","w",'utf-8')
+wsp = codecs.open("../../data/fuzzy_xml/zwsp.xml","w",'utf-8')
+_2gram = codecs.open("../../data/fuzzy_xml/z2gram.xml","w",'utf-8')
+_3gram = codecs.open("../../data/fuzzy_xml/z3gram.xml","w",'utf-8')
+_5gram = codecs.open("../../data/fuzzy_xml/z5gram.xml","w",'utf-8')
 cvfv.write("<add>\n")
 cvfv.write("<doc>\n")
 fmc.write("<add>\n")
@@ -30,7 +31,10 @@ _3gram.write("<add>\n")
 _3gram.write("<doc>\n")
 _5gram.write("<add>\n")
 _5gram.write("<doc>\n")
-tmp = glob.glob("./data/fuzzy/*.csv")
+
+# tmp = glob.glob("./data/fuzzy/*.csv")
+tmp = sys.argv
+del tmp[0]
 for i in tmp:
     reader = open(i).read().split("\n")
     for row in reader:

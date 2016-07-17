@@ -1,4 +1,5 @@
 import glob
+import sys
 import commands
 import csv
 import pysolr
@@ -189,7 +190,9 @@ def solr_serchpy(classname,birthmark, quely):
 
 
 if __name__ == "__main__":
-    tmp = glob.glob("./birthmark/*.csv")
+    # tmp = glob.glob("./birthmark/*.csv")
+    tmp = sys.argv
+    del tmp[0]
     for i in tmp:
          reader = open(i).read().split("\n")
          if '\0' not in open(i).read():

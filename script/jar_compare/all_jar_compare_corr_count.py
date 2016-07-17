@@ -1,3 +1,4 @@
+#jar_compare_main
 import glob
 import os
 
