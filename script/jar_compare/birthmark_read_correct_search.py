@@ -6,17 +6,20 @@ import codecs
 import os
 from decimal import *
 import math
+import sys
 
-cvfv = codecs.open("class_cvfv.csv","w",'utf-8')
-fmc = codecs.open("class_fmc.csv","w",'utf-8')
-fuc = codecs.open("class_fuc.csv","w",'utf-8')
-twogram = codecs.open("class_2gram.csv","w",'utf-8')
-trigram = codecs.open("class_3gram.csv","w",'utf-8')
-smc = codecs.open("class_smc.csv","w",'utf-8')
-uc = codecs.open("class_uc.csv","w",'utf-8')
-wsp = codecs.open("class_wsp.csv","w",'utf-8')
+cvfv = codecs.open("../../data/class_compare/class_cvfv.csv","w",'utf-8')
+fmc = codecs.open("../../data/class_compare/class_fmc.csv","w",'utf-8')
+fuc = codecs.open("../../data/class_compare/class_fuc.csv","w",'utf-8')
+twogram = codecs.open("../../data/class_compare/class_2gram.csv","w",'utf-8')
+trigram = codecs.open("../../data/class_compare/class_3gram.csv","w",'utf-8')
+smc = codecs.open("../../data/class_compare/class_smc.csv","w",'utf-8')
+uc = codecs.open("../../data/class_compare/class_uc.csv","w",'utf-8')
+wsp = codecs.open("../../data/class_compare/class_wsp.csv","w",'utf-8')
 
-tmp = glob.glob("*.csv")
+# tmp = glob.glob("*.csv")
+tmp = sys.argv
+del tmp[0]
 for i in tmp:
     count = 0
     reader = open(i).read().split("\n")

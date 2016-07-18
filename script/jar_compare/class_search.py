@@ -166,48 +166,49 @@ def solr_serchclass(birthmark, first_class, secound_class):
 
 if __name__ == "__main__":
     param = sys.argv
-    reader = open(param[1]).read().split("\n")
-    count = 0
-    for row in reader:
-        if count >= 500:
-            break
-        count += 1
-        all_hit_count += 1
-        print
-        print "all_count"+str(count)
-        print "all_hit_count"+str(all_hit_count)
-        print
-        class_line = row.split(",")
-        if len(class_line) >= 2:
-            first_class = class_line[0].split(".")
-            secound_class = class_line[1].split(".")
-            # print "first"
-            # print first_class
-            # print "secound"
-            # print secound_class
-            # print
-            if "cvfv" in param[1]:
-                j = "cvfv"
-            elif "fmc" in param[1]:
-                j = "fmc"
-            elif "fuc" in param[1]:
-                j = "fuc"
-            elif "2gram" in param[1]:
-                j = "2gram"
-            elif "3gram" in param[1]:
-                j = "3gram"
-            elif "smc" in param[1]:
-                j = "smc"
-            elif "uc" in param[1]:
-                j = "uc"
-            elif "wsp" in param[1]:
-                j = "wsp"
-            result = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+str(j)+" extract ~/birthmark_server/birthmark/class_list/"+first_class[-1]+".class")
-            result_split = result.split(",",3)
-            if len(result_split) >= 4:
-                # print result_split[3]
-                # print secound_class[-1]
-                solr_serchclass(j, str(result_split[3]), str(secound_class[-1]))
-            else:
-                count -= 1
+    for i in param:
+        reader = open(i).read().split("\n")
+        count = 0
+        for row in reader:
+            if count >= 500:
+                break
+            count += 1
+            all_hit_count += 1
+            print
+            print "all_count"+str(count)
+            print "all_hit_count"+str(all_hit_count)
+            print
+            class_line = row.split(",")
+            if len(class_line) >= 2:
+                first_class = class_line[0].split(".")
+                secound_class = class_line[1].split(".")
+                # print "first"
+                # print first_class
+                # print "secound"
+                # print secound_class
+                # print
+                if "cvfv" in param[1]:
+                    j = "cvfv"
+                elif "fmc" in param[1]:
+                    j = "fmc"
+                elif "fuc" in param[1]:
+                    j = "fuc"
+                elif "2gram" in param[1]:
+                    j = "2gram"
+                elif "3gram" in param[1]:
+                    j = "3gram"
+                elif "smc" in param[1]:
+                    j = "smc"
+                elif "uc" in param[1]:
+                    j = "uc"
+                elif "wsp" in param[1]:
+                    j = "wsp"
+                result = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+str(j)+" extract ~/birthmark_server/birthmark/class_list/"+first_class[-1]+".class")
+                result_split = result.split(",",3)
+                if len(result_split) >= 4:
+                    # print result_split[3]
+                    # print secound_class[-1]
+                    solr_serchclass(j, str(result_split[3]), str(secound_class[-1]))
+                else:
+                    count -= 1
 

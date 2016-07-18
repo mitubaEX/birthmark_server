@@ -7,12 +7,15 @@
 *.xml
 stigmata
 data/*
+!data/birth_search_result
 !data/birth_xml
 !data/birthmark
 !data/class_compare
+!data/class_compare_before
 !data/class_list
 !data/fuzzy
 !data/fuzzy_nob
 !data/fuzzy_nob_xml
 !data/fuzzy_xml
 !data/jar
+!data/search_birthmark
