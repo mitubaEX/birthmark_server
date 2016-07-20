@@ -29,25 +29,25 @@ def solr_serchpy(classname,birthmark, quely):
     # con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     quely_tmp = quely
     quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
-    url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q="
+    url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=data%3A"
     url_query = urllib.quote_plus(str(quely))
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     sort_ = urllib.quote_plus("strdist(data,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,data,score,lev:strdist(data,"+str(quely)+",edit)")
-    url = url_mae+url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
     # print str(quely)
     # print len(quely)
     if(len(quely) <= 4000 and len(quely) != 0):
         # print
         # print quely
         # print str(url)
-        res = urllib.urlopen(str(url))
+        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
         tmp_res = res.read()
         # print tmp_res
         if tmp_res is not None and tmp_res:
             response = eval(tmp_res)
             url = url_mae+url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+str(response['response']['numFound'])+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-            res = urllib.urlopen(str(url))
+            res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
             tmp_res = res.read()
             if tmp_res is not None and tmp_res:
                 response = eval(tmp_res)

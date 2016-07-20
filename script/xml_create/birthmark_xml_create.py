@@ -53,9 +53,9 @@ for j in files:
 # wsp.write("<doc>\n")
 
 
-# tmp = glob.glob("*.csv")
-tmp = sys.argv
-del tmp[0]
+tmp = glob.glob("../../data/birthmark/*.csv")
+#tmp = sys.argv
+#del tmp[0]
 print tmp
 count = 0
 for i in tmp:

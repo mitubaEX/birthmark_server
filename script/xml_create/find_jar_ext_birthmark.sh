@@ -11,10 +11,12 @@ do
         echo $abs
         filename=`basename ${file}`
         echo "$filename-$i.csv"
+        echo $i
+        #echo "java -jar ../../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b $i extract "$abs/$filename" > "../../data/birthmark/$filename-$i.csv" ;"
         java -jar ../../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b $i extract "$abs/$filename" > "../../data/birthmark/$filename-$i.csv" ;
         # java -jar ../../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b $i extract "$abs/$filename" > "../../data/fuzzy/$filename-$i.csv" ;
     done
-    echo $i
+    #echo $i
 done
 echo "hello"
 # python ~/birthmark_server/jar/barthmark/bathmark_xml_create.py

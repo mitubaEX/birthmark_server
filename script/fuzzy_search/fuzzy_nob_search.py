@@ -77,12 +77,12 @@ def fuzzy_serchpy(classname, birthmark, quely):
     global fault_count
     global search_count
     # print quely
-    url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q="
+    url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=value%3A"
     url_query = urllib.quote_plus(str(quely))
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     sort_ = urllib.quote_plus("strdist(value,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,value,score,lev:strdist(value,"+str(quely)+",edit)")
-    url = url_mae+url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
     # print url
     # print birthmark
     # print 'value:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
@@ -90,9 +90,11 @@ def fuzzy_serchpy(classname, birthmark, quely):
     # response = con.select(q='value:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)"),fields='*,value,lev:strdist(value,\"'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")+'\",edit)',sort='lev',sort_order='desc',rows=1)
     # response = con.select("strdist("+str(quely.replace("[","\[").replace("]","\]").replace(":","\:"))+",text,edit)",rows=response.numFound)
 
-    res = urllib.urlopen(str(url))
+    res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
     response = eval(res.read())
-    print response
+    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows="+str(response['response']['numFound'])+"&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+    res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
+    response = eval(res.read())
     # print response
     results = response['response']['docs']
     # print len(results)
@@ -162,6 +164,8 @@ def fuzzy_serchpy(classname, birthmark, quely):
     count = 0
     # # result_annalysys
     for hit in results:
+        if Decimal(hit['lev']) < Decimal('0.75'):
+            break
         # print hit['filename'],hit['value']
         # print hit['score']
         #print pydeep.compare(str(quely),str(hit['value'][0]))

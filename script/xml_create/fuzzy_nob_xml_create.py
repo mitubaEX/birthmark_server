@@ -32,9 +32,9 @@ _3gram.write("<doc>\n")
 _5gram.write("<add>\n")
 _5gram.write("<doc>\n")
 
-# tmp = glob.glob("./data/fuzzy/*.csv")
-tmp = sys.argv
-del tmp[0]
+tmp = glob.glob("../../data/fuzzy/*.csv")
+#tmp = sys.argv
+#del tmp[0]
 for i in tmp:
     reader = open(i).read().split("\n")
     for row in reader:

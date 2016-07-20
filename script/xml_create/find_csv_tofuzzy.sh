@@ -10,7 +10,7 @@ do
     filename=`basename ${file}`
     echo "fuzzy-$filename"
     # cd ~/birthmark_server/jar/fuzzy
-    python ~/yamamoto15scis/prog/fuzzyhashing.py -b "$abs/$filename" > "../../data/fuzzy/fuzzy-$filename" ;
+    python ../../2015scis_yamamoto/prog/fuzzyhashing.py -b "$abs/$filename" > "../../data/fuzzy/fuzzy-$filename" ;
 done
 
 find ../../data/birthmark -maxdepth 1 -name "*.csv" |
@@ -22,6 +22,6 @@ do
     filename=`basename ${file}`
     echo "fuzzy-$filename"
     # cd ~/birthmark_server/jar/fuzzy
-    python ~/yamamoto15scis/prog/fuzzyhashing.py "$abs/$filename" > "../../data/fuzzy_nob/fuzzy-$filename" ;
+    python ../../2015scis_yamamoto/prog/fuzzyhashing.py "$abs/$filename" > "../../data/fuzzy_nob/fuzzy-$filename" ;
 done
 echo "hello"
