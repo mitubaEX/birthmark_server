@@ -2,6 +2,7 @@
 from bottle import route, run, template, request, redirect
 import os
 import commands
+import sys
 
 @route('/')
 def index():
@@ -9,7 +10,8 @@ def index():
 
 @route('/upload', method='POST')
 def do_upload():
-    barthmark_kind = ["cvfv", "fmc", "fuc", "2gram", "3gram", "smc", "uc", "wsp"]
+    barthmark_kind = sys.argv
+    del barthmark_kind[0]
     upload   = request.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
     upload.save("./data/jar",overwrite=True)
@@ -18,7 +20,7 @@ def do_upload():
     for tmp in barthmark_kind:
         os.system("java -jar ../../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+tmp+" extract ../jar/"+upload.filename+" > ../search_birthmark/"+upload.filename+"-"+tmp+".csv")
 
-    # os.system("bash ../../script/birth_search/birth_main.sh")
+    os.system("bash ../../script/birth_search/birth_main.sh")
     os.system("bash ../../script/fuzzy_search/fuzzy_main.sh")
     redirect("/")
     return template("search")

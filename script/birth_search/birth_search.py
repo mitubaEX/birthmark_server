@@ -45,7 +45,7 @@ def solr_serchpy(classname,birthmark, quely):
         tmp_res = res.read()
         if tmp_res is not None and tmp_res:
             response = eval(tmp_res)
-            url = url_mae+url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+str(response['response']['numFound'])+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+            url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+str(response['response']['numFound'])+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
             res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
             tmp_res = res.read()
             if tmp_res is not None and tmp_res:
@@ -137,10 +137,13 @@ def solr_serchpy(classname,birthmark, quely):
                     print "lev"+ str(hit['lev'])
                     # print "score"+str(hit['score'])
                     # count += 1
+                    birth_class = birth_class.replace("$","\$")
+                    classname = classname.replace("$","\$")
                     print count
                     print hit['place']
-                    print birth_class[1]
-                    subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class+".class ~/birthmark_server/data/jar/"+classname+".class "+str(hit['lev']),shell=True)
+                    print birth_class
+                    print classname
+                    subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class.replace(".","/")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/")+".class "+str(hit['lev']),shell=True)
 
         elapsed_time = time.time() - start
         global all_time
