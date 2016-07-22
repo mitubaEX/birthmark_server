@@ -33,22 +33,22 @@ def solr_serchclass(birthmark, first_class, secound_class):
     if len(str(first_class)) <=5000:
         quely_tmp = first_class
         quely = str(first_class).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
-        url_mae = "http://localhost:8983/solr/birth_"+ str(birthmark)+"/select?q="
+        url_mae = "http://localhost:8983/solr/birth_"+ str(birthmark)+"/select?q=data%3A"
         url_query = urllib.quote_plus(str(quely))
         url_query_tmp = urllib.quote_plus(str(quely_tmp))
         sort_ = urllib.quote_plus("strdist(data,"+str(quely)+",edit) desc")
         fl_ = urllib.quote_plus("*,data,score,lev:strdist(data,"+str(quely)+",edit)")
-        url = url_mae+url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+        url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
 
         # response = con.select("strdist("+str(first_class).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")+",text,edit)")
-        res = urllib.urlopen(str(url))
+        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
         # print res.read()
         tmp_res = res.read()
         if tmp_res is not None and tmp_res:
             # print tmp_res
             response = eval(tmp_res)
-            url = url_mae+url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&"+ str(response['response']['numFound'])+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-            res = urllib.urlopen(str(url))
+            url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&"+ str(response['response']['numFound'])+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+            res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
             # print res.read()
             tmp_res = res.read()
 
