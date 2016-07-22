@@ -63,32 +63,17 @@ def fuzzy_serchpy(classname, birthmark, quely):
     global fuzzy_birth
     # start
     start = time.time()
-    # con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'_nob')
-    # print str(quely)
-    # quely = pydeep.hash_buf(str(quely))
     quely_tmp = quely
-    # print quely
     quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
-    # print
-    # print "classname: "+classname
-    # print "quely: "+quely.replace("\)",")").replace("\(","(")
-    # print
     global correct_count
     global fault_count
     global search_count
-    # print quely
     url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=value%3A"
     url_query = urllib.quote_plus(str(quely))
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     sort_ = urllib.quote_plus("strdist(value,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,value,score,lev:strdist(value,"+str(quely)+",edit)")
     url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-    # print url
-    # print birthmark
-    # print 'value:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
-# q='data:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)"),fields='*,data,lev:strdist(data,\"'+str(quely)+'\",edit)',sort_order='strdist(data,\"'+str(quely)+'\",edit) desc',rows=1
-    # response = con.select(q='value:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)"),fields='*,value,lev:strdist(value,\"'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")+'\",edit)',sort='lev',sort_order='desc',rows=1)
-    # response = con.select("strdist("+str(quely.replace("[","\[").replace("]","\]").replace(":","\:"))+",text,edit)",rows=response.numFound)
 
     res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
     response = eval(res.read())
