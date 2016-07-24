@@ -141,23 +141,23 @@ def fuzzy_serchpy(classname, birthmark, quely):
             fuzzy_count_correct[7] += len(results)
             hit_count[7] += 1
         correct_count += len(results)
-    print "none_count:"+str(fault_count)
-    print "is_count:"+str(correct_count)
-    search_count += 1
-    print search_count
-    print
-    print "fuzzy_count_correct"
-    for n in fuzzy_count_correct:
-        print n
-    print
-    print "fuzzy_count_fault"
-    for m in fuzzy_count_fault:
-        print m
-    print
-    print "hit_count"
-    for o in hit_count:
-        print o
-    print "data: "+birthmark
+    # print "none_count:"+str(fault_count)
+    # print "is_count:"+str(correct_count)
+    # search_count += 1
+    # print search_count
+    # print
+    # print "fuzzy_count_correct"
+    # for n in fuzzy_count_correct:
+    #     print n
+    # print
+    # print "fuzzy_count_fault"
+    # for m in fuzzy_count_fault:
+    #     print m
+    # print
+    # print "hit_count"
+    # for o in hit_count:
+    #     print o
+    # print "data: "+birthmark
 
 
     count = 0
@@ -232,52 +232,52 @@ def fuzzy_serchpy(classname, birthmark, quely):
                 uc_fault_count += 1
             elif "wsp" in str(birthmark):
                 wsp_fault_count += 1
-    elapsed_time = time.time() - start
-    global all_time
-    all_time += elapsed_time
-    print "All_time:"+str(all_time)
-    print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
-    print "fuzzy 0.75"
-    print
-    print cvfv_count
-    print fmc_count
-    print fuc_count
-    print _2gram_count
-    print _3gram_count
-    print smc_count
-    print uc_count
-    print wsp_count
-    print
-    print "fuzzy 0.75-0.25"
-    for l in middle_count:
-        print l
-    print
-    print "fuzzy 0.25"
-    print
-    print cvfv_fault_count
-    print fmc_fault_count
-    print fuc_fault_count
-    print _2gram_fault_count
-    print _3gram_fault_count
-    print smc_fault_count
-    print uc_fault_count
-    print wsp_fault_count
-    print
-    for k,l,m in zip(fuzzy_value,fuzzy_lev,fuzzy_birth):
-        print k+","+l+","+m
-    print
+    # elapsed_time = time.time() - start
+    # global all_time
+    # all_time += elapsed_time
+    # print "All_time:"+str(all_time)
+    # print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+    # print "fuzzy 0.75"
+    # print
+    # print cvfv_count
+    # print fmc_count
+    # print fuc_count
+    # print _2gram_count
+    # print _3gram_count
+    # print smc_count
+    # print uc_count
+    # print wsp_count
+    # print
+    # print "fuzzy 0.75-0.25"
+    # for l in middle_count:
+    #     print l
+    # print
+    # print "fuzzy 0.25"
+    # print
+    # print cvfv_fault_count
+    # print fmc_fault_count
+    # print fuc_fault_count
+    # print _2gram_fault_count
+    # print _3gram_fault_count
+    # print smc_fault_count
+    # print uc_fault_count
+    # print wsp_fault_count
+    # print
+    # for k,l,m in zip(fuzzy_value,fuzzy_lev,fuzzy_birth):
+    #     print k+","+l+","+m
+    # print
 
 
 
 
-# tmp = glob.glob("./data/birthmark/*.csv")
+tmp = glob.glob("../../data/search_birthmark/*.csv")
 # print tmp
 print "fuzzy_start"
-tmp = sys.argv
-del tmp[0]
+# tmp = sys.argv
+# del tmp[0]
 for i in tmp:
     if "jar" in str(i):
-        reader = commands.getoutput("python ./yamamoto15scis/prog/fuzzyhashing.py -b "+i).split("\n");
+        reader = commands.getoutput("python ../../2015scis_yamamoto/prog/fuzzyhashing.py -b "+i).split("\n");
         # reader = open(i).read().split("\n")
         for row in reader:
             # print "row:"+row

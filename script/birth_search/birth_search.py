@@ -137,13 +137,11 @@ def solr_serchpy(classname,birthmark, quely):
                     print "lev"+ str(hit['lev'])
                     # print "score"+str(hit['score'])
                     # count += 1
-                    birth_class = birth_class.replace("$","\$")
-                    classname = classname.replace("$","\$")
                     print count
                     print hit['place']
                     print birth_class
                     print classname
-                    subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class.replace(".","/")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/")+".class "+str(hit['lev']),shell=True)
+                    subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class "+str(hit['lev']),shell=True)
 
         elapsed_time = time.time() - start
         global all_time
