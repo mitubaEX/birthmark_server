@@ -22,7 +22,7 @@ cvfv_count = 0
 fmc_count = 0
 fuc_count = 0
 _2gram_count = 0
-_3gram_count = 0
+_5gram_count = 0
 smc_count = 0
 uc_count = 0
 wsp_count = 0
@@ -31,7 +31,7 @@ cvfv_fault_count = 0
 fmc_fault_count = 0
 fuc_fault_count = 0
 _2gram_fault_count = 0
-_3gram_fault_count = 0
+_5gram_fault_count = 0
 smc_fault_count = 0
 uc_fault_count = 0
 wsp_fault_count = 0
@@ -44,7 +44,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
     global fmc_count
     global fuc_count
     global _2gram_count
-    global _3gram_count
+    global _5gram_count
     global smc_count
     global uc_count
     global wsp_count
@@ -53,7 +53,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
     global fmc_fault_count
     global fuc_fault_count
     global _2gram_fault_count
-    global _3gram_fault_count
+    global _5gram_fault_count
     global smc_fault_count
     global uc_fault_count
     global wsp_fault_count
@@ -61,6 +61,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
     global fuzzy_value
     global fuzzy_lev
     global fuzzy_birth
+    global dist_kind
     # start
     start = time.time()
     quely_tmp = quely
@@ -73,12 +74,12 @@ def fuzzy_serchpy(classname, birthmark, quely):
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     sort_ = urllib.quote_plus("strdist(value,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,value,score,lev:strdist(value,"+str(quely)+",edit)")
-    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\","+dist_kind+")+desc&rows=1&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\","+dist_kind+")&wt=python&indent=true"
 
     res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
     response = eval(res.read())
-    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows="+str(response['response']['numFound'])+"&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-    res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
+    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\","+dist_kind+")+desc&rows="+str(response['response']['numFound'])+"&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\","+dist_kind+")&wt=python&indent=true"
+    res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A").replace("\"","%22"))
     response = eval(res.read())
     # print response
     results = response['response']['docs']
@@ -92,7 +93,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
             fuzzy_count_fault[2] += 1
         elif "2gram" in str(birthmark):
             fuzzy_count_fault[3] += 1
-        elif "3gram" in str(birthmark):
+        elif "5gram" in str(birthmark):
             fuzzy_count_fault[4] += 1
         elif "smc" in str(birthmark):
             fuzzy_count_fault[5] += 1
@@ -114,7 +115,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
         elif "2gram" in str(birthmark):
             fuzzy_count_correct[3] += len(results)
             hit_count[3] += 1
-        elif "3gram" in str(birthmark):
+        elif "5gram" in str(birthmark):
             fuzzy_count_correct[4] += len(results)
             hit_count[4] += 1
         elif "smc" in str(birthmark):
@@ -176,8 +177,8 @@ def fuzzy_serchpy(classname, birthmark, quely):
                 fuc_count += 1
             elif "2gram" in str(birthmark):
                 _2gram_count += 1
-            elif "3gram" in str(birthmark):
-                _3gram_count += 1
+            elif "5gram" in str(birthmark):
+                _5gram_count += 1
             elif "smc" in str(birthmark):
                 smc_count += 1
             elif "uc" in str(birthmark):
@@ -193,7 +194,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
                 middle_count[2] += 1
             elif "2gram" in str(birthmark):
                 middle_count[3] += 1
-            elif "3gram" in str(birthmark):
+            elif "5gram" in str(birthmark):
                 middle_count[4] += 1
             elif "smc" in str(birthmark):
                 middle_count[5] += 1
@@ -210,8 +211,8 @@ def fuzzy_serchpy(classname, birthmark, quely):
                 fuc_fault_count += 1
             elif "2gram" in str(birthmark):
                 _2gram_fault_count += 1
-            elif "3gram" in str(birthmark):
-                _3gram_fault_count += 1
+            elif "5gram" in str(birthmark):
+                _5gram_fault_count += 1
             elif "smc" in str(birthmark):
                 smc_fault_count += 1
             elif "uc" in str(birthmark):
@@ -229,7 +230,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
     # print fmc_count
     # print fuc_count
     # print _2gram_count
-    # print _3gram_count
+    # print _5gram_count
     # print smc_count
     # print uc_count
     # print wsp_count
@@ -244,7 +245,7 @@ def fuzzy_serchpy(classname, birthmark, quely):
     # print fmc_fault_count
     # print fuc_fault_count
     # print _2gram_fault_count
-    # print _3gram_fault_count
+    # print _5gram_fault_count
     # print smc_fault_count
     # print uc_fault_count
     # print wsp_fault_count
@@ -260,6 +261,7 @@ tmp = glob.glob("../../data/search_birthmark/*.csv")
 print tmp
 print "fuzzy_start"
 # tmp = sys.argv
+dist_kind = sys.argv[1]
 # del tmp[0]
 for i in tmp:
     if "jar" in str(i):
@@ -281,8 +283,8 @@ for i in tmp:
                     fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_fuc_nob", fuzzy_split[1])
                 elif "2gram" in str(i):
                     fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_2gram_nob", fuzzy_split[1])
-                elif "3gram" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_3gram_nob", fuzzy_split[1])
+                elif "5gram" in str(i):
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_5gram_nob", fuzzy_split[1])
                 elif "smc" in str(i):
                     fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_smc_nob", fuzzy_split[1])
                 elif "uc" in str(i):

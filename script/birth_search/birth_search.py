@@ -62,7 +62,7 @@ def solr_serchpy(classname,birthmark, quely):
                         birthmark_count_fault[2] += 1
                     elif "2gram" in birthmark:
                         birthmark_count_fault[3] += 1
-                    elif "3gram" in birthmark:
+                    elif "5gram" in birthmark:
                         birthmark_count_fault[4] += 1
                     elif "smc" in birthmark:
                         birthmark_count_fault[5] += 1
@@ -84,7 +84,7 @@ def solr_serchpy(classname,birthmark, quely):
                     elif "2gram" in birthmark:
                         birthmark_count[3] += len(results)
                         hit_count[3] += 1
-                    elif "3gram" in birthmark:
+                    elif "5gram" in birthmark:
                         birthmark_count[4] += len(results)
                         hit_count[4] += 1
                     elif "smc" in birthmark:
@@ -173,8 +173,8 @@ if __name__ == "__main__":
                             solr_serchpy(row[0],"birth_fuc",str(row[3]))
                         elif "2gram" in str(i):
                             solr_serchpy(row[0],"birth_2gram",str(row[3]))
-                        elif "3gram" in str(i):
-                            solr_serchpy(row[0],"birth_3gram",str(row[3]))
+                        elif "5gram" in str(i):
+                            solr_serchpy(row[0],"birth_5gram",str(row[3]))
                         elif "smc" in row[2]:
                             solr_serchpy(row[0],"birth_smc",str(row[3]))
                         elif "uc" in row[2]:

@@ -14,7 +14,7 @@ cvfv_count = 0
 fmc_count = 0
 fuc_count = 0
 _2gram_count = 0
-_3gram_count = 0
+_5gram_count = 0
 smc_count = 0
 uc_count = 0
 wsp_count = 0
@@ -23,13 +23,15 @@ cvfv_fault_count = 0
 fmc_fault_count = 0
 fuc_fault_count = 0
 _2gram_fault_count = 0
-_3gram_fault_count = 0
+_5gram_fault_count = 0
 smc_fault_count = 0
 uc_fault_count = 0
 wsp_fault_count = 0
 
-args = sys.argv
-del args[0]
+# args = sys.argv
+# del args[0]
+args = glob.glob("../../data/birth_search_result/*.csv")
+# print args
 for i in args:
     tmpnum = 2
     count = 0
@@ -51,8 +53,8 @@ for i in args:
                         fuc_count += 1
                     elif "2gram" in str(i):
                         _2gram_count += 1
-                    elif "3gram" in str(i):
-                        _3gram_count += 1
+                    elif "5gram" in str(i):
+                        _5gram_count += 1
                     elif "smc" in str(i):
                         smc_count += 1
                     elif "uc" in str(i):
@@ -70,7 +72,7 @@ for i in args:
                         middle_count[2] += 1
                     elif "2gram" in str(i):
                         middle_count[3] += 1
-                    elif "3gram" in str(i):
+                    elif "5gram" in str(i):
                         middle_count[4] += 1
                     elif "smc" in str(i):
                         middle_count[5] += 1
@@ -89,8 +91,8 @@ for i in args:
                         fuc_fault_count += 1
                     elif "2gram" in str(i):
                         _2gram_fault_count += 1
-                    elif "3gram" in str(i):
-                        _3gram_fault_count += 1
+                    elif "5gram" in str(i):
+                        _5gram_fault_count += 1
                     elif "smc" in str(i):
                         smc_fault_count += 1
                     elif "uc" in str(i):
@@ -108,8 +110,8 @@ for i in args:
                     fuc_fault_count += 1
                 elif "2gram" in str(i):
                     _2gram_fault_count += 1
-                elif "3gram" in str(i):
-                    _3gram_fault_count += 1
+                elif "5gram" in str(i):
+                    _5gram_fault_count += 1
                 elif "smc" in str(i):
                     smc_fault_count += 1
                 elif "uc" in str(i):
@@ -129,8 +131,8 @@ for i in args:
                         fuc_count += 1
                     elif "2gram" in str(i):
                         _2gram_count += 1
-                    elif "3gram" in str(i):
-                        _3gram_count += 1
+                    elif "5gram" in str(i):
+                        _5gram_count += 1
                     elif "smc" in str(i):
                         smc_count += 1
                     elif "uc" in str(i):
@@ -148,7 +150,7 @@ for i in args:
                         middle_count[2] += 1
                     elif "2gram" in str(i):
                         middle_count[3] += 1
-                    elif "3gram" in str(i):
+                    elif "5gram" in str(i):
                         middle_count[4] += 1
                     elif "smc" in str(i):
                         middle_count[5] += 1
@@ -167,8 +169,8 @@ for i in args:
                         fuc_fault_count += 1
                     elif "2gram" in str(i):
                         _2gram_fault_count += 1
-                    elif "3gram" in str(i):
-                        _3gram_fault_count += 1
+                    elif "5gram" in str(i):
+                        _5gram_fault_count += 1
                     elif "smc" in str(i):
                         smc_fault_count += 1
                     elif "uc" in str(i):
@@ -186,8 +188,8 @@ for i in args:
                     fuc_fault_count += 1
                 elif "2gram" in str(i):
                     _2gram_fault_count += 1
-                elif "3gram" in str(i):
-                    _3gram_fault_count += 1
+                elif "5gram" in str(i):
+                    _5gram_fault_count += 1
                 elif "smc" in str(i):
                     smc_fault_count += 1
                 elif "uc" in str(i):
@@ -201,7 +203,7 @@ for i in args:
 # print fmc_count
 # print fuc_count
 # print _2gram_count
-# print _3gram_count
+# print _5gram_count
 # print smc_count
 # print uc_count
 # print wsp_count
@@ -215,7 +217,7 @@ for i in args:
 # print fmc_fault_count
 # print fuc_fault_count
 # print _2gram_fault_count
-# print _3gram_fault_count
+# print _5gram_fault_count
 # print smc_fault_count
 # print uc_fault_count
 # print wsp_fault_count
