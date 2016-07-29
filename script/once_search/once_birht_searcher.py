@@ -27,22 +27,24 @@ def solr_serchpy(classname,birthmark, quely):
     start = time.time()
     # con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     quely_tmp = quely
+    # print quely
     quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
     url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=data%3A"
     url_query = urllib.quote_plus(str(quely))
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     sort_ = urllib.quote_plus("strdist(data,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,data,score,lev:strdist(data,"+str(quely)+",edit)")
-    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&rows=100&wt=python&indent=true"
     # print str(quely)
-    # print len(quely)
+    print len(quely)
     if(len(quely) <= 4000 and len(quely) != 0):
         # print
         # print quely
-        # print str(url)
-        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
+        print str(url)
+        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A").replace("\"","%22"))
+        print str(url_mae)+str(url).replace(",","%2C").replace(":","%3A")
         tmp_res = res.read()
-        print tmp_res
+        # print tmp_res
         # print tmp_res
         if tmp_res is not None and tmp_res:
             # response = eval(tmp_res)
@@ -56,7 +58,7 @@ def solr_serchpy(classname,birthmark, quely):
             #         birthmark_count_fault[2] += 1
             #     elif "2gram" in birthmark:
             #         birthmark_count_fault[3] += 1
-            #     elif "3gram" in birthmark:
+            #     elif "5gram" in birthmark:
             #         birthmark_count_fault[4] += 1
             #     elif "smc" in birthmark:
             #         birthmark_count_fault[5] += 1
@@ -78,7 +80,7 @@ def solr_serchpy(classname,birthmark, quely):
             #     elif "2gram" in birthmark:
             #         birthmark_count[3] += len(results)
             #         hit_count[3] += 1
-            #     elif "3gram" in birthmark:
+            #     elif "5gram" in birthmark:
             #         birthmark_count[4] += len(results)
             #         hit_count[4] += 1
             #     elif "smc" in birthmark:
@@ -159,7 +161,7 @@ def solr_serchpy(classname,birthmark, quely):
                 #     elif "2gram" in birthmark:
                 #         birthmark_count[3] -= 1
                 #         compare_fault[3] += 1
-                #     elif "3gram" in birthmark:
+                #     elif "5gram" in birthmark:
                 #         birthmark_count[4] -= 1
                 #         compare_fault[4] += 1
                 #     elif "smc" in birthmark:
@@ -211,14 +213,13 @@ if __name__ == "__main__":
                             solr_serchpy(search_class_[1],"birth_fuc",str(row[3]))
                         elif "2gram" in str(i):
                             solr_serchpy(search_class_[1],"birth_2gram",str(row[3]))
-                        elif "3gram" in str(i):
-                            solr_serchpy(search_class_[1],"birth_3gram",str(row[3]))
+                        elif "5gram" in str(i):
+                            solr_serchpy(search_class_[1],"birth_5gram",str(row[3]))
                         elif "smc" in row[2]:
                             solr_serchpy(search_class_[1],"birth_smc",str(row[3]))
                         elif "uc" in row[2]:
                             solr_serchpy(search_class_[1],"birth_uc",str(row[3]))
                         elif "wsp" in row[2]:
                             solr_serchpy(search_class_[1],"birth_wsp",str(row[3]))
-                        break
 
 

@@ -20,6 +20,106 @@ hit_count = [0,0,0,0,0,0,0,0]
 birthmark_count_fault = [0,0,0,0,0,0,0,0]
 csv.field_size_limit(1000000000)
 
+def getnumFound(response,count,url,url_query_tmp,url_mae,url_query):
+    if response['response']['numFound'] == 0:
+        return 0
+    print count
+    # print response['response']['docs']
+    print len(response['response']['docs'])
+    if len(response['response']['docs']) <= 100:
+        return len(response['response']['docs'])
+    if Decimal(str(response['response']['docs'][100-1]['lev'])) >= Decimal("0.75"):
+        url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&start="+str(count)+"&rows=100&fl=lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
+        tmp_res = res.read()
+        if tmp_res is not None and tmp_res:
+            response = eval(tmp_res)
+            count = getnumFound(response,count + 100,url,url_query_tmp,url_mae,url_query)
+            print "hello"
+            print count
+            print
+            return count
+    else:
+        for i in reversed(response['response']['docs']):
+            if Decimal(i['lev']) >= Decimal("0.75"):
+                return count
+            count -= 1
+
+
+
+def counter(results,birthmark):
+    global none_count
+    global is_count
+    global birthmark_count
+    global compare_fault
+    if len(results) == 0:
+        if "cvfv" in birthmark:
+            birthmark_count_fault[0] += 1
+        elif "fmc" in birthmark:
+            birthmark_count_fault[1] += 1
+        elif "fuc" in birthmark:
+            birthmark_count_fault[2] += 1
+        elif "2gram" in birthmark:
+            birthmark_count_fault[3] += 1
+        elif "5gram" in birthmark:
+            birthmark_count_fault[4] += 1
+        elif "smc" in birthmark:
+            birthmark_count_fault[5] += 1
+        elif "uc" in birthmark:
+            birthmark_count_fault[6] += 1
+        elif "wsp" in birthmark:
+            birthmark_count_fault[7] += 1
+        none_count += 1
+    elif len(results) != 0:
+        if "cvfv" in birthmark:
+            birthmark_count[0] += len(results)
+            hit_count[0] += 1
+        elif "fmc" in birthmark:
+            birthmark_count[1] += len(results)
+            hit_count[1] += 1
+        elif "fuc" in birthmark:
+            birthmark_count[2] += len(results)
+            hit_count[2] += 1
+        elif "2gram" in birthmark:
+            birthmark_count[3] += len(results)
+            hit_count[3] += 1
+        elif "5gram" in birthmark:
+            birthmark_count[4] += len(results)
+            hit_count[4] += 1
+        elif "smc" in birthmark:
+            birthmark_count[5] += len(results)
+            hit_count[5] += 1
+        elif "uc" in birthmark:
+            birthmark_count[6] += len(results)
+            hit_count[6] += 1
+        elif "wsp" in birthmark:
+            birthmark_count[7] += len(results)
+            hit_count[7] += 1
+        is_count += len(results)
+    print "is_count"+str(is_count)
+    print "none_count:"+str(none_count)
+    print
+    print "birthmark_count"
+    for n in birthmark_count:
+        print n
+    print
+    print "birthmark_count_fault"
+    for m in birthmark_count_fault:
+        print m
+    print
+    print "hit_count"
+    for o in hit_count:
+        print o
+    print
+    print "compare_fault"
+    for k in compare_fault:
+        print k
+    print
+    print "birthmark_count"
+    for n in birthmark_count:
+        print n
+    print
+
 def solr_serchpy(classname,birthmark, quely):
     global none_count
     global is_count
@@ -29,97 +129,104 @@ def solr_serchpy(classname,birthmark, quely):
 
     #### query set
     quely_tmp = quely
-    quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
+    quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)").replace("+","\+").replace("-","\-").replace("&&","\&&").replace("||","\||").replace("{","\{").replace("}","\}").replace("^","\^").replace("?","\?")
+    print quely
     url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=data%3A"
     url_query = urllib.quote_plus(str(quely))
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     # sort_ = "strdist(data,"+str(quely)+",edit)+desc"
     # fl_ = urllib.quote_plus("*,data,score,lev:strdist(data,"+str(quely)+",edit)")
-    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows=1&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows=100&fl=filename,place,barthmark,data,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
 
-
+    numFound_value = 0
     #### search start
     if(len(quely) <= 4000 and len(quely) != 0):
         #### search again
-        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
+        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
         tmp_res = res.read()
         if tmp_res is not None and tmp_res:
             response = eval(tmp_res)
-            url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+str(response['response']['numFound'])+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-            res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2c").replace(":","%3A"))
+            print response
+            numFound_value = getnumFound(response,100,url,url_query_tmp,url_mae,url_query)
+            print
+            print numFound_value
+            url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+str(numFound_value)+"&fl=filename,place,barthmark,data,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+            res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
             tmp_res = res.read()
             if tmp_res is not None and tmp_res:
                 response = eval(tmp_res)
                 results = response['response']['docs']
 
+                counter(results,birthmark)
+
                 # hit_count
-                if len(results) == 0:
-                    if "cvfv" in birthmark:
-                        birthmark_count_fault[0] += 1
-                    elif "fmc" in birthmark:
-                        birthmark_count_fault[1] += 1
-                    elif "fuc" in birthmark:
-                        birthmark_count_fault[2] += 1
-                    elif "2gram" in birthmark:
-                        birthmark_count_fault[3] += 1
-                    elif "5gram" in birthmark:
-                        birthmark_count_fault[4] += 1
-                    elif "smc" in birthmark:
-                        birthmark_count_fault[5] += 1
-                    elif "uc" in birthmark:
-                        birthmark_count_fault[6] += 1
-                    elif "wsp" in birthmark:
-                        birthmark_count_fault[7] += 1
-                    none_count += 1
-                elif len(results) != 0:
-                    if "cvfv" in birthmark:
-                        birthmark_count[0] += len(results)
-                        hit_count[0] += 1
-                    elif "fmc" in birthmark:
-                        birthmark_count[1] += len(results)
-                        hit_count[1] += 1
-                    elif "fuc" in birthmark:
-                        birthmark_count[2] += len(results)
-                        hit_count[2] += 1
-                    elif "2gram" in birthmark:
-                        birthmark_count[3] += len(results)
-                        hit_count[3] += 1
-                    elif "5gram" in birthmark:
-                        birthmark_count[4] += len(results)
-                        hit_count[4] += 1
-                    elif "smc" in birthmark:
-                        birthmark_count[5] += len(results)
-                        hit_count[5] += 1
-                    elif "uc" in birthmark:
-                        birthmark_count[6] += len(results)
-                        hit_count[6] += 1
-                    elif "wsp" in birthmark:
-                        birthmark_count[7] += len(results)
-                        hit_count[7] += 1
-                    is_count += len(results)
-                print "is_count"+str(is_count)
-                print "none_count:"+str(none_count)
-                print
-                print "birthmark_count"
-                for n in birthmark_count:
-                    print n
-                print
-                print "birthmark_count_fault"
-                for m in birthmark_count_fault:
-                    print m
-                print
-                print "hit_count"
-                for o in hit_count:
-                    print o
-                print
-                print "compare_fault"
-                for k in compare_fault:
-                    print k
-                print
-                print "birthmark_count"
-                for n in birthmark_count:
-                    print n
-                print
+                # if len(results) == 0:
+                #     if "cvfv" in birthmark:
+                #         birthmark_count_fault[0] += 1
+                #     elif "fmc" in birthmark:
+                #         birthmark_count_fault[1] += 1
+                #     elif "fuc" in birthmark:
+                #         birthmark_count_fault[2] += 1
+                #     elif "2gram" in birthmark:
+                #         birthmark_count_fault[3] += 1
+                #     elif "5gram" in birthmark:
+                #         birthmark_count_fault[4] += 1
+                #     elif "smc" in birthmark:
+                #         birthmark_count_fault[5] += 1
+                #     elif "uc" in birthmark:
+                #         birthmark_count_fault[6] += 1
+                #     elif "wsp" in birthmark:
+                #         birthmark_count_fault[7] += 1
+                #     none_count += 1
+                # elif len(results) != 0:
+                #     if "cvfv" in birthmark:
+                #         birthmark_count[0] += len(results)
+                #         hit_count[0] += 1
+                #     elif "fmc" in birthmark:
+                #         birthmark_count[1] += len(results)
+                #         hit_count[1] += 1
+                #     elif "fuc" in birthmark:
+                #         birthmark_count[2] += len(results)
+                #         hit_count[2] += 1
+                #     elif "2gram" in birthmark:
+                #         birthmark_count[3] += len(results)
+                #         hit_count[3] += 1
+                #     elif "5gram" in birthmark:
+                #         birthmark_count[4] += len(results)
+                #         hit_count[4] += 1
+                #     elif "smc" in birthmark:
+                #         birthmark_count[5] += len(results)
+                #         hit_count[5] += 1
+                #     elif "uc" in birthmark:
+                #         birthmark_count[6] += len(results)
+                #         hit_count[6] += 1
+                #     elif "wsp" in birthmark:
+                #         birthmark_count[7] += len(results)
+                #         hit_count[7] += 1
+                #     is_count += len(results)
+                # print "is_count"+str(is_count)
+                # print "none_count:"+str(none_count)
+                # print
+                # print "birthmark_count"
+                # for n in birthmark_count:
+                #     print n
+                # print
+                # print "birthmark_count_fault"
+                # for m in birthmark_count_fault:
+                #     print m
+                # print
+                # print "hit_count"
+                # for o in hit_count:
+                #     print o
+                # print
+                # print "compare_fault"
+                # for k in compare_fault:
+                #     print k
+                # print
+                # print "birthmark_count"
+                # for n in birthmark_count:
+                #     print n
+                # print
                 count = 0
                 # result_annalysys
                 for hit in results:
