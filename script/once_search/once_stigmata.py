@@ -9,9 +9,9 @@ tmp = glob.glob("../../data/jar/*.jar")
 all_time = 0
 start = time.time()
 for i in tmp:
-    commands.getoutput("java -jar ../../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+ param[1] +" compare "+param[2]+" "+i)
-    # print t
-    elapsed_time = time.time() - start
+    t = commands.getoutput("java -Xmx4g -jar ../../stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+ param[1] +" compare "+param[2]+" "+i)
+    t = t.split("\n")
+    elapsed_time = int(t[0].replace(" ns",""))
     all_time += elapsed_time
     print "All_time:"+str(all_time)
-    print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+    print ("elapsed_time:{0}".format(elapsed_time) + "[ns]")

@@ -24,7 +24,6 @@ def solr_serchpy(classname,birthmark, quely):
     global is_count
     global birthmark_count
     global compare_fault
-    start = time.time()
     # con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     quely_tmp = quely
     # print quely
@@ -34,14 +33,20 @@ def solr_serchpy(classname,birthmark, quely):
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     sort_ = urllib.quote_plus("strdist(data,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,data,score,lev:strdist(data,"+str(quely)+",edit)")
-    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&rows=1&wt=python&indent=true"
+    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&rows=1&wt=json&indent=true"
     # print str(quely)
     # print len(quely)
     if(len(quely) <= 4000 and len(quely) != 0):
         # print
         # print quely
         # print str(url)
+        start = time.time()
         res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A").replace("\"","%22"))
+        elapsed_time = time.time() - start
+        global all_time
+        all_time += elapsed_time
+        print "All_time:"+str(all_time)
+        print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
         # print str(url_mae)+str(url).replace(",","%2C").replace(":","%3A")
         tmp_res = res.read()
         # print tmp_res
@@ -184,11 +189,6 @@ def solr_serchpy(classname,birthmark, quely):
 
                     # compare_fault += 1
                     # print "compare_fault: "+str(compare_fault)
-        elapsed_time = time.time() - start
-        global all_time
-        all_time += elapsed_time
-        print "All_time:"+str(all_time)
-        print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 
 
 if __name__ == "__main__":
@@ -215,6 +215,10 @@ if __name__ == "__main__":
                             solr_serchpy(search_class_[1],"birth_2gram",str(row[3]))
                         elif "3gram" in str(i):
                             solr_serchpy(search_class_[1],"birth_3gram",str(row[3]))
+                        elif "4gram" in str(i):
+                            solr_serchpy(search_class_[1],"birth_4gram",str(row[3]))
+                        elif "6gram" in str(i):
+                            solr_serchpy(search_class_[1],"birth_6gram",str(row[3]))
                         elif "5gram" in str(i):
                             solr_serchpy(search_class_[1],"birth_5gram",str(row[3]))
                         elif "smc" in row[2]:
