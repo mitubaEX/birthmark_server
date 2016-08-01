@@ -12,12 +12,14 @@ fmc = codecs.open("../../data/birth_xml/birth_fmc.xml","w",'utf-8')
 fuc = codecs.open("../../data/birth_xml/birth_fuc.xml","w",'utf-8')
 _2gram = codecs.open("../../data/birth_xml/birth_2gram.xml","w",'utf-8')
 _3gram = codecs.open("../../data/birth_xml/birth_3gram.xml","w",'utf-8')
+_4gram = codecs.open("../../data/birth_xml/birth_4gram.xml","w",'utf-8')
 _5gram = codecs.open("../../data/birth_xml/birth_5gram.xml","w",'utf-8')
+_6gram = codecs.open("../../data/birth_xml/birth_6gram.xml","w",'utf-8')
 smc = codecs.open("../../data/birth_xml/birth_smc.xml","w",'utf-8')
 uc = codecs.open("../../data/birth_xml/birth_uc.xml","w",'utf-8')
 wsp = codecs.open("../../data/birth_xml/birth_wsp.xml","w",'utf-8')
 
-files = [cvfv, fmc, fuc, _2gram, _3gram, _5gram, smc, uc, wsp]
+files = [cvfv, fmc, fuc, _2gram, _3gram, _4gram, _5gram, _6gram, smc, uc, wsp]
 
 def init(filename):
     filename.write("<add>\n")
@@ -109,8 +111,12 @@ for i in tmp:
                         #     kgram.write("<field name=\"data\">"+row[3].decode('utf-8').replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')+"</field>\n")
                     elif "3gram" in str(i):
                         writer(_3gram, row)
+                    elif "4gram" in str(i):
+                        writer(_4gram, row)
                     elif "5gram" in str(i):
                         writer(_5gram, row)
+                    elif "6gram" in str(i):
+                        writer(_6gram, row)
                     elif "smc" in row[2]:
                         writer(smc, row)
                         # smc.write("</doc>\n")

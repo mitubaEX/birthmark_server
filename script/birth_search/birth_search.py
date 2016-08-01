@@ -26,8 +26,8 @@ def getnumFound(response,count,url,url_query_tmp,url_mae,url_query):
     print count
     # print response['response']['docs']
     print len(response['response']['docs'])
-    if len(response['response']['docs']) <= 100:
-        return len(response['response']['docs'])
+    if len(response['response']['docs']) < 100:
+        return count
     if Decimal(str(response['response']['docs'][100-1]['lev'])) >= Decimal("0.75"):
         url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&start="+str(count)+"&rows=100&fl=lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
         res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
@@ -159,74 +159,6 @@ def solr_serchpy(classname,birthmark, quely):
 
                 counter(results,birthmark)
 
-                # hit_count
-                # if len(results) == 0:
-                #     if "cvfv" in birthmark:
-                #         birthmark_count_fault[0] += 1
-                #     elif "fmc" in birthmark:
-                #         birthmark_count_fault[1] += 1
-                #     elif "fuc" in birthmark:
-                #         birthmark_count_fault[2] += 1
-                #     elif "2gram" in birthmark:
-                #         birthmark_count_fault[3] += 1
-                #     elif "5gram" in birthmark:
-                #         birthmark_count_fault[4] += 1
-                #     elif "smc" in birthmark:
-                #         birthmark_count_fault[5] += 1
-                #     elif "uc" in birthmark:
-                #         birthmark_count_fault[6] += 1
-                #     elif "wsp" in birthmark:
-                #         birthmark_count_fault[7] += 1
-                #     none_count += 1
-                # elif len(results) != 0:
-                #     if "cvfv" in birthmark:
-                #         birthmark_count[0] += len(results)
-                #         hit_count[0] += 1
-                #     elif "fmc" in birthmark:
-                #         birthmark_count[1] += len(results)
-                #         hit_count[1] += 1
-                #     elif "fuc" in birthmark:
-                #         birthmark_count[2] += len(results)
-                #         hit_count[2] += 1
-                #     elif "2gram" in birthmark:
-                #         birthmark_count[3] += len(results)
-                #         hit_count[3] += 1
-                #     elif "5gram" in birthmark:
-                #         birthmark_count[4] += len(results)
-                #         hit_count[4] += 1
-                #     elif "smc" in birthmark:
-                #         birthmark_count[5] += len(results)
-                #         hit_count[5] += 1
-                #     elif "uc" in birthmark:
-                #         birthmark_count[6] += len(results)
-                #         hit_count[6] += 1
-                #     elif "wsp" in birthmark:
-                #         birthmark_count[7] += len(results)
-                #         hit_count[7] += 1
-                #     is_count += len(results)
-                # print "is_count"+str(is_count)
-                # print "none_count:"+str(none_count)
-                # print
-                # print "birthmark_count"
-                # for n in birthmark_count:
-                #     print n
-                # print
-                # print "birthmark_count_fault"
-                # for m in birthmark_count_fault:
-                #     print m
-                # print
-                # print "hit_count"
-                # for o in hit_count:
-                #     print o
-                # print
-                # print "compare_fault"
-                # for k in compare_fault:
-                #     print k
-                # print
-                # print "birthmark_count"
-                # for n in birthmark_count:
-                #     print n
-                # print
                 count = 0
                 # result_annalysys
                 for hit in results:
@@ -280,8 +212,14 @@ if __name__ == "__main__":
                             solr_serchpy(row[0],"birth_fuc",str(row[3]))
                         elif "2gram" in str(i):
                             solr_serchpy(row[0],"birth_2gram",str(row[3]))
+                        elif "3gram" in str(i):
+                            solr_serchpy(row[0],"birth_3gram",str(row[3]))
+                        elif "4gram" in str(i):
+                            solr_serchpy(row[0],"birth_4gram",str(row[3]))
                         elif "5gram" in str(i):
                             solr_serchpy(row[0],"birth_5gram",str(row[3]))
+                        elif "6gram" in str(i):
+                            solr_serchpy(row[0],"birth_6gram",str(row[3]))
                         elif "smc" in row[2]:
                             solr_serchpy(row[0],"birth_smc",str(row[3]))
                         elif "uc" in row[2]:

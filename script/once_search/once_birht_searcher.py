@@ -28,25 +28,25 @@ def solr_serchpy(classname,birthmark, quely):
     # con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
     quely_tmp = quely
     # print quely
-    quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
+    quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)").replace("+","\+").replace("-","\-").replace("&&","\&&").replace("||","\||").replace("{","\{").replace("}","\}").replace("^","\^").replace("?","\?")
     url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=data%3A"
     url_query = urllib.quote_plus(str(quely))
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
     sort_ = urllib.quote_plus("strdist(data,"+str(quely)+",edit) desc")
     fl_ = urllib.quote_plus("*,data,score,lev:strdist(data,"+str(quely)+",edit)")
-    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&rows=100&wt=python&indent=true"
+    url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&rows=1&wt=python&indent=true"
     # print str(quely)
-    print len(quely)
+    # print len(quely)
     if(len(quely) <= 4000 and len(quely) != 0):
         # print
         # print quely
-        print str(url)
+        # print str(url)
         res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A").replace("\"","%22"))
-        print str(url_mae)+str(url).replace(",","%2C").replace(":","%3A")
+        # print str(url_mae)+str(url).replace(",","%2C").replace(":","%3A")
         tmp_res = res.read()
         # print tmp_res
         # print tmp_res
-        if tmp_res is not None and tmp_res:
+        # if tmp_res is not None and tmp_res:
             # response = eval(tmp_res)
             # results = response['response']['docs']
             # if len(results) == 0:
@@ -125,7 +125,7 @@ def solr_serchpy(classname,birthmark, quely):
                 # birth_class = hit['place'].split("!")
                 # place = birth_class[0].split(":")
                 # birth_kind = birthmark.split("_")
-            print "birth_kind: "+birthmark
+            # print "birth_kind: "+birthmark
                 # print "score"+str(hit['score'])
                 # print "lev"+ str(hit['lev'])
                 # print "score"+str(hit['score'])
@@ -213,6 +213,8 @@ if __name__ == "__main__":
                             solr_serchpy(search_class_[1],"birth_fuc",str(row[3]))
                         elif "2gram" in str(i):
                             solr_serchpy(search_class_[1],"birth_2gram",str(row[3]))
+                        elif "3gram" in str(i):
+                            solr_serchpy(search_class_[1],"birth_3gram",str(row[3]))
                         elif "5gram" in str(i):
                             solr_serchpy(search_class_[1],"birth_5gram",str(row[3]))
                         elif "smc" in row[2]:
