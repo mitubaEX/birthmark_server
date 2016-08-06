@@ -37,6 +37,8 @@ for i in args:
     count = 0
     reader = open(i).read().split("\n")
     for row in reader:
+        if " ns" in row:
+            continue
         count += 1
         if count == tmpnum:
             tmpnum += 3

@@ -11,6 +11,8 @@ from decimal import *
 import urllib,json
 import sys
 
+all_comparison_time = 0
+kaisuu = 0
 all_time = 0.0
 none_count = 0
 is_count = 0
@@ -121,10 +123,12 @@ def counter(results,birthmark):
     print
 
 def solr_serchpy(classname,birthmark, quely):
+    global all_comparison_time
     global none_count
     global is_count
     global birthmark_count
     global compare_fault
+    global kaisuu
     start = time.time()
 
     #### query set
@@ -150,38 +154,48 @@ def solr_serchpy(classname,birthmark, quely):
             numFound_value = getnumFound(response,100,url,url_query_tmp,url_mae,url_query)
             print
             print numFound_value
-            url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+str(numFound_value)+"&fl=filename,place,barthmark,data,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-            res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
-            tmp_res = res.read()
-            if tmp_res is not None and tmp_res:
-                response = eval(tmp_res)
-                results = response['response']['docs']
+            if numFound_value is not None:
+                url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+str(numFound_value)+"&fl=filename,place,barthmark,data,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+                res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
+                tmp_res = res.read()
+                if tmp_res is not None and tmp_res:
+                    response = eval(tmp_res)
+                    results = response['response']['docs']
 
-                counter(results,birthmark)
+                    counter(results,birthmark)
 
-                count = 0
-                # result_annalysys
-                for hit in results:
-                    print hit['lev']
-                    if Decimal(str(hit['lev'])) < Decimal('0.75'):
-                        break
-                    # print hit
-                    # for filename,place,barthmark in [(filename,place,barthmark) for filename in hit['filename'] for place in hit['place'] for barthmark in hit['barthmark']]:
-                    # for filename,place,barthmark in zip(hit['filename'],hit['place'],hit['barthmark']):
-                    birth_class = hit['filename'].replace(".","/")
-                    place = birth_class[0].split(":")
-                    birth_kind = birthmark.split("_")
-                    # print "birth_kind"+birth_kind[1]
-                    # print "score"+str(hit['score'])
-                    print "lev"+ str(hit['lev'])
-                    # print "score"+str(hit['score'])
-                    # count += 1
-                    print count
-                    print hit['place']
-                    print birth_class
-                    print classname
-                    subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class "+str(hit['lev']),shell=True)
-
+                    count = 0
+                    # result_annalysys
+                    for hit in results:
+                        print hit['lev']
+                        if Decimal(str(hit['lev'])) < Decimal('0.75'):
+                            break
+                        # print hit
+                        # for filename,place,barthmark in [(filename,place,barthmark) for filename in hit['filename'] for place in hit['place'] for barthmark in hit['barthmark']]:
+                        # for filename,place,barthmark in zip(hit['filename'],hit['place'],hit['barthmark']):
+                        birth_class = hit['filename'].replace(".","/")
+                        place = birth_class[0].split(":")
+                        birth_kind = birthmark.split("_")
+                        # print "birth_kind"+birth_kind[1]
+                        # print "score"+str(hit['score'])
+                        print "lev"+ str(hit['lev'])
+                        # print "score"+str(hit['score'])
+                        # count += 1
+                        print count
+                        print hit['place']
+                        print birth_class
+                        print classname
+                        # subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class "+str(hit['lev']),shell=True)
+                        if os.path.isfile(birth_class+"-"+classname+"-"+str(hit['lev'])+".csv") == False:
+                            t = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[1]+" compare ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class 2>&1 | tee "+birth_class.replace("/",".")+"-"+classname+"-"+str(hit['lev'])+".csv")
+                            t = t.split("\n")
+                            print t
+                            # print str(int(t[0].replace(" ns","")))
+                            all_comparison_time += int(t[0].replace(" ns",""))
+                            kaisuu += 1
+                            print "comparison_time"
+                            print all_comparison_time
+                            print kaisuu
         elapsed_time = time.time() - start
         global all_time
         all_time += elapsed_time
