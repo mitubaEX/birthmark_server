@@ -187,7 +187,7 @@ def solr_serchpy(classname,birthmark, quely):
                         print classname
                         # subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class "+str(hit['lev']),shell=True)
                         if os.path.isfile(birth_class+"-"+classname+"-"+str(hit['lev'])+".csv") == False:
-                            t = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[1]+" compare ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class 2>&1 | tee "+birth_class.replace("/",".")+"-"+classname+"-"+str(hit['lev'])+".csv")
+                            t = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[1]+" compare ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class 2>&1 | tee ~/birthmark_server/data/birth_search_result/"+birth_class.replace("/",".")+"-"+classname+"-"+str(hit['lev'])+".csv")
                             t = t.split("\n")
                             print t
                             # print str(int(t[0].replace(" ns","")))
