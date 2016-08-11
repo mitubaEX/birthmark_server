@@ -12,6 +12,7 @@ import sys
 # tmp = glob.glob("*.csv")
 tmp = sys.argv
 del tmp[0]
+dicts = {}
 for i in tmp:
     count = 0
     reader = open(i).read().split("\n")
@@ -65,27 +66,118 @@ for i in tmp:
                         print "l: "+str(l)
                         print
                         if birthmark == "cvfv":
-                            cvfv.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "fmc":
-                            fmc.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "fuc":
-                            fuc.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "2gram":
-                            twogram.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "3gram":
-                            trigram.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "4gram":
-                            _4gram.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "5gram":
-                            _5gram.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "6gram":
-                            _6gram.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "smc":
-                            smc.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "uc":
-                            uc.write(classname+","+class_line[index + 1]+"\n")
+                            if dicts.has_key(classname):
+                                dicts[classname].append(class_line[index+1])
+                            else:
+                                lists = [class_line[index+1]]
+                                dicts[classname] = lists
                         elif birthmark == "wsp":
                             wsp.write(classname+","+class_line[index + 1]+"\n")
 
 
 
+if birthmark == "cvfv":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            cvfv.write(m+",")
+        cvfv.write("\n")
+elif birthmark == "fmc":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            fmc.write(m+",")
+        fmc.write("\n")
+elif birthmark == "fuc":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            fuc.write(m+",")
+        fuc.write("\n")
+elif birthmark == "2gram":
+    for l in dicts.keys():
+        #print dicts[l]
+        for m in dicts[l]:
+            twogram.write(str(m)+",")
+        twogram.write("\n")
+elif birthmark == "3gram":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            trigram.write(m+",")
+        trigram.write("\n")
+elif birthmark == "4gram":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            _4gram.write(m+",")
+        _4gram.write("\n")
+elif birthmark == "5gram":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            _5gram.write(m+",")
+        _5gram.write("\n")
+elif birthmark == "6gram":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            _6gram.write(m+",")
+        _6gram.write("\n")
+elif birthmark == "smc":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            smc.write(m+",")
+        smc.write("\n")
+elif birthmark == "uc":
+    for l in dicts.keys():
+        for m in dicts[l]:
+            uc.write(m+",")
+        uc.write("\n")
