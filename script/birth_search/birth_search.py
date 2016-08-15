@@ -30,7 +30,7 @@ def getnumFound(response,count,url,url_query_tmp,url_mae,url_query):
     print len(response['response']['docs'])
     if len(response['response']['docs']) < 100:
         return count
-    if Decimal(str(response['response']['docs'][100-1]['lev'])) >= Decimal("0.75"):
+    if Decimal(str(response['response']['docs'][100-1]['lev'])) >= Decimal("0.5"):
         url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&start="+str(count)+"&rows=100&fl=lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
         res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
         tmp_res = res.read()
@@ -43,7 +43,7 @@ def getnumFound(response,count,url,url_query_tmp,url_mae,url_query):
             return count
     else:
         for i in reversed(response['response']['docs']):
-            if Decimal(i['lev']) >= Decimal("0.75"):
+            if Decimal(i['lev']) >= Decimal("0.5"):
                 return count
             count -= 1
 
@@ -186,7 +186,7 @@ def solr_serchpy(classname,birthmark, quely):
                         print birth_class
                         print classname
                         # subprocess.call("sh ./jar_compare.sh "+birth_kind[1]+" ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class "+str(hit['lev']),shell=True)
-                        if os.path.isfile(birth_class+"-"+classname+"-"+str(hit['lev'])+".csv") == False:
+                        if os.path.isfile("../../data/birth_search_result/"birth_class+"-"+classname+"-"+str(hit['lev'])+".csv") == False:
                             t = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[1]+" compare ~/birthmark_server/data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ~/birthmark_server/data/jar/"+classname.replace(".","/").replace("$","\$")+".class 2>&1 | tee ~/birthmark_server/data/birth_search_result/"+birth_class.replace("/",".")+"-"+classname+"-"+str(hit['lev'])+".csv")
                             t = t.split("\n")
                             print t
