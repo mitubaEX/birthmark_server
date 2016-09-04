@@ -94,162 +94,17 @@ def solr_serchclass(birthmark, first_class, secound_class):
             print "All_time:"+str(all_time)
             print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
             if numFound_value is not None:
-                # url = url_query+"&sort=strdist(data,\""+url_query_tmp+"\",edit)+desc&rows="+ str(numFound_value)+"&fl=*,data,score,lev:strdist(data,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
-                # res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
-                # # print res.read()
-                # tmp_res = res.read()
-                # response = eval(tmp_res)
-                # results = response['response']['docs']
-                # if len(results) == 0:
-                #     if "cvfv" in birthmark:
-                #         birth_correct[0] += 1
-                #     elif "fmc" in birthmark:
-                #         birth_fault[1] += 1
-                #     elif "fuc" in birthmark:
-                #         birth_fault[2] += 1
-                #     elif "2gram" in birthmark:
-                #         birth_fault[3] += 1
-                #     elif "3gram" in birthmark:
-                #         birth_fault[4] += 1
-                #     elif "smc" in birthmark:
-                #         birth_fault[5] += 1
-                #     elif "uc" in birthmark:
-                #         birth_fault[6] += 1
-                #     elif "wsp" in birthmark:
-                #         birth_fault[7] += 1
-                # else:
-                #     if "cvfv" in birthmark:
-                #         birth_correct[0] += len(results)
-                #         hit_count[0] += 1
-                #     elif "fmc" in birthmark:
-                #         birth_correct[1] += len(results)
-                #         hit_count[1] += 1
-                #     elif "fuc" in birthmark:
-                #         birth_correct[2] += len(results)
-                #         hit_count[2] += 1
-                #     elif "2gram" in birthmark:
-                #         birth_correct[3] += len(results)
-                #         hit_count[3] += 1
-                #     elif "3gram" in birthmark:
-                #         birth_correct[4] += len(results)
-                #         hit_count[4] += 1
-                #     elif "smc" in birthmark:
-                #         birth_correct[5] += len(results)
-                #         hit_count[5] += 1
-                #     elif "uc" in birthmark:
-                #         birth_correct[6] += len(results)
-                #         hit_count[6] += 1
-                #     elif "wsp" in birthmark:
-                #         birth_correct[7] += len(results)
-                #         hit_count[7] += 1
-                # print
-                # print "birth_correct"
-                # for n in birth_correct:
-                #     print n
-                # print
-                # print "birth_fault"
-                # for m in birth_fault:
-                #     print m
-                # print
-                # print "hit_count"
-                # for o in hit_count:
-                #     print o
-                # print
-                # print results
                 for results in all_list_:
                     for hit in results['response']['docs']:
                         if Decimal(str(hit['lev'])) < Decimal("0.75"):
                             break
-                        # for filename,place,barthmark in [(filename,place,barthmark) for filename in hit['filename'] for place in hit['place'] for barthmark in hit['barthmark']]:
-                        # birth_class = hit['place'].split("!")
-                        # place = birth_class[0].split(":")
-                        # birth_kind = hit['barthmark'].split("_")
-
-
-                        #os.system("cp "+place[2]+" .")
-                        #os.system("jar xf "+os.path.basename(place[2])+" "+birth_class[1][1:])
                         flags.append(str(hit['filename'].replace(".class","")))
-                        # correct_fault_count += 1
-                        # if str(hit['filename'].replace(".class","")) in flags:
-                        #     pass
-                        # elif str(hit['filename'].replace(".class","")) not in flags:
-                        #     flags.append(str(hit['filename'].replace(".class","")))
-                        #     correct_fault_count += 1
-                            #flag = False
-                            #for n in secound_class:
-                            #    correct_fault_count += 1
-                            #    if n == hit['filename'].replace(".class",""):
-                            #        #correct_count += 1
-                            #        flag = True
-                            #        break
-                            #    #else:
-                            #        #left_count += 1
-                            #if flag:
-                            #    correct_count += 1
-                            #else:
-                            #    left_count += 1
-                            #print
-                            #print "correct_count: "+str(correct_count)
-                            #print
-                            #print
-                            #print "left_count: "+str(left_count)
-                            #print
                     for n in secound_class:
-                        # if str(n) in flags_right:
-                        #     pass
-                        # elif str(n) not in flags_right:
                         flags_right.append(str(n))
-                            #flag = False
-                            #for hit in results:
-                            #    birth_class = hit['place'].split("!")
-                            #    place = birth_class[0].split(":")
-                            #    birth_kind = hit['barthmark'].split("_")
-                            #    #correct_fault_count += 1
-                            #    if n == hit['filename'].replace(".class",""):
-                            #        break
-                            #    elif n != hit['filename'].replace(".class",""):
-                            #        flag = True
-                            #        break
-                            #if flag:
-                            #    right_count += 1
-                            #print
-                            #print "right_count: "+str(right_count)
-                            #print
-                    # print correct_fault_count
                 all_list_ = []
-   # else:
-   #     if "cvfv" in birthmark:
-   #         birth_correct[0] += 1
-   #     elif "fmc" in birthmark:
-   #         birth_fault[1] += 1
-   #     elif "fuc" in birthmark:
-   #         birth_fault[2] += 1
-   #     elif "2gram" in birthmark:
-   #         birth_fault[3] += 1
-   #     elif "3gram" in birthmark:
-   #         birth_fault[4] += 1
-   #     elif "smc" in birthmark:
-   #         birth_fault[5] += 1
-   #     elif "uc" in birthmark:
-   #         birth_fault[6] += 1
-   #     elif "wsp" in birthmark:
-   #         birth_fault[7] += 1
-   #     print
-   #     print "birth_fault"
-   #     for m in birth_fault:
-   #         print m
-   #     print
 
 
 if __name__ == "__main__":
-    #global correct_count
-    #global correct_fault_count
-    #global left_count
-    #global right_count
-    #global flags
-    #global flags_right
-    #global right_count_flag
-    #global left_count_flag
     param = sys.argv
     del param[0]
     for i in param:
