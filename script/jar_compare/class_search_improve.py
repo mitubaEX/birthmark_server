@@ -93,6 +93,8 @@ def solr_serchclass(birthmark, first_class, secound_class):
             print all_count
             print "All_time:"+str(all_time)
             print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+
+
             if numFound_value is not None:
                 for results in all_list_:
                     for hit in results['response']['docs']:

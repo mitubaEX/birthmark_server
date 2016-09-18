@@ -125,8 +125,6 @@ for i in tmp:
                             else:
                                 lists = [class_line[index+1]]
                                 dicts[classname] = lists
-                        elif birthmark == "wsp":
-                            wsp.write(classname+","+class_line[index + 1]+"\n")
 
 
 

@@ -41,18 +41,6 @@ def finish_writer(filename):
 
 for j in files:
     init(j)
-# fmc.write("<add>\n")
-# fmc.write("<doc>\n")
-# fuc.write("<add>\n")
-# fuc.write("<doc>\n")
-# kgram.write("<add>\n")
-# kgram.write("<doc>\n")
-# smc.write("<add>\n")
-# smc.write("<doc>\n")
-# uc.write("<add>\n")
-# uc.write("<doc>\n")
-# wsp.write("<add>\n")
-# wsp.write("<doc>\n")
 
 
 tmp = glob.glob("../../data/birthmark/*.csv")
