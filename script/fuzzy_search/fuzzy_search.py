@@ -1,319 +1,167 @@
-import os
-import sys
+# birthmark search hit_count -> output
 import glob
 import commands
-import codecs
-import time
+import csv
+import pysolr
 import solr
-import pydeep
+import os
+import time
+import subprocess
 import editdistance
 from decimal import *
 import urllib,json
-fuzzy_count_correct = [0,0,0,0,0,0,0,0]
-fuzzy_count_fault = [0,0,0,0,0,0,0,0]
-hit_count = [0,0,0,0,0,0,0,0]
-middle_count = [0,0,0,0,0,0,0,0]
-search_count = 0
-fuzzy_value = []
-fuzzy_lev = []
-fuzzy_birth = []
+import sys
 
-cvfv_count = 0
-fmc_count = 0
-fuc_count = 0
-_2gram_count = 0
-_5gram_count = 0
-smc_count = 0
-uc_count = 0
-wsp_count = 0
-
-cvfv_fault_count = 0
-fmc_fault_count = 0
-fuc_fault_count = 0
-_2gram_fault_count = 0
-_5gram_fault_count = 0
-smc_fault_count = 0
-uc_fault_count = 0
-wsp_fault_count = 0
-correct_count = 0
-fault_count = 0
+all_comparison_time = 0
+kaisuu = 0
 all_time = 0.0
+none_count = 0
+is_count = 0
+compare_fault = [0,0,0,0,0,0,0,0]
+birthmark_count = [0,0,0,0,0,0,0,0]
+hit_count = [0,0,0,0,0,0,0,0]
+birthmark_count_fault = [0,0,0,0,0,0,0,0]
+csv.field_size_limit(1000000000)
+all_list_ = []
 
-def fuzzy_serchpy(classname, birthmark, quely):
-    global cvfv_count
-    global fmc_count
-    global fuc_count
-    global _2gram_count
-    global _5gram_count
-    global smc_count
-    global uc_count
-    global wsp_count
+dict_ = {"fuzzy_2gram":0, "fuzzy_3gram":0, "fuzzy_4gram":0, "fuzzy_5gram":0, "fuzzy_6gram":0, "fuzzy_uc":0, "fuzzy_wsp":0 }
+non_dict_ = {"fuzzy_2gram":0, "fuzzy_3gram":0, "fuzzy_4gram":0, "fuzzy_5gram":0, "fuzzy_6gram":0, "fuzzy_uc":0, "fuzzy_wsp":0 }
 
-    global cvfv_fault_count
-    global fmc_fault_count
-    global fuc_fault_count
-    global _2gram_fault_count
-    global _5gram_fault_count
-    global smc_fault_count
-    global uc_fault_count
-    global wsp_fault_count
+def getnumFound(response,count,url,url_query_tmp,url_mae,url_query):
+    global all_list_
+    if response['response']['numFound'] == 0:
+        return 0
+    if len(response['response']['docs']) < 100:
+        all_list_.append(response)
+        return count
+    if Decimal(str(response['response']['docs'][100-1]['lev'])) >= Decimal(0.5):
+        all_list_.append(response)
+        url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&start="+str(count)+"&rows=100&fl=filename,value,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
+        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
+        tmp_res = res.read()
+        # print tmp_res
+        if tmp_res is not None and tmp_res:
+            response = eval(tmp_res)
+            count = getnumFound(response,count + 100,url,url_query_tmp,url_mae,url_query)
+            return count
+    else:
+        for i in reversed(response['response']['docs']):
+            all_list_.append(response)
+            if Decimal(i['lev']) >= Decimal(0.5):
+                return count
+            count -= 1
 
-    global fuzzy_value
-    global fuzzy_lev
-    global fuzzy_birth
-    global dist_kind
-    # start
-    start = time.time()
-    con = solr.Solr('http://localhost:8983/solr/'+ str(birthmark)+'')
-    # print str(quely)
-    # quely = pydeep.hash_buf(str(quely))
+
+
+
+def solr_serchpy(classname,birthmark, quely):
+    global all_comparison_time
+    global none_count
+    global is_count
+    global birthmark_count
+    global compare_fault
+    global kaisuu
+    global all_list_
+    global dict_
+    global non_dict_
+
+    #### query set
     quely_tmp = quely
-    # print quely
-    quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
-    # print
-    # print "classname: "+classname
-    # print "quely: "+quely.replace("\)",")").replace("\(","(")
-    # print
-    global correct_count
-    global fault_count
-    global search_count
-    # print quely
+    quely = str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)").replace("+","\+").replace("-","\-").replace("&&","\&&").replace("||","\||").replace("{","\{").replace("}","\}").replace("^","\^").replace("?","\?")
+    print quely
+    # url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=value%3A"
     url_mae = "http://localhost:8983/solr/"+ str(birthmark)+"/select?q=value%3A"
     url_query = urllib.quote_plus(str(quely))
     url_query_tmp = urllib.quote_plus(str(quely_tmp))
-    sort_ = urllib.quote_plus("strdist(value,"+str(quely)+",edit) desc")
-    fl_ = urllib.quote_plus("*,value,score,lev:strdist(value,"+str(quely)+",edit)")
-    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\","+str(dist_kind)+")+desc&fl=*,lev:strdist(value,\""+url_query_tmp+"\","+str(dist_kind)+")&wt=python&indent=true"
-    # print birthmark
-    # print 'value:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")
-# q='data:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)"),fields='*,data,lev:strdist(data,\"'+str(quely)+'\",edit)',sort_order='strdist(data,\"'+str(quely)+'\",edit) desc',rows=1
-    # response = con.select(q='value:'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)"),fields='*,value,lev:strdist(value,\"'+str(quely).replace("[","\[").replace("]","\]").replace(":","\:").replace("<","\<").replace(">","\>").replace("(","\(").replace(")","\)")+'\",edit)',sort='lev',sort_order='desc',rows=1)
-    # response = con.select("strdist("+str(quely.replace("[","\[").replace("]","\]").replace(":","\:"))+",text,edit)",rows=response.numFound)
+    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\",edit)+desc&rows=100&fl=filename,value,lev:strdist(value,\""+url_query_tmp+"\",edit)&wt=python&indent=true"
 
-    res = urllib.urlopen("http://localhost:8983/solr/fuzzy_2gram/select?q=*%3A*&wt=json&indent=true")
-    response = eval(res.read())
-    url = url_query+"&sort=strdist(value,\""+url_query_tmp+"\","+str(dist_kind)+")+desc&rows="+str(response['response']['numFound'])+"&fl=*,value,score,lev:strdist(value,\""+url_query_tmp+"\","+str(dist_kind)+")&wt=python&indent=true"
-    res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A").replace("\"","%22"))
-    response = eval(res.read())
-    # print str(url_mae)+str(url).replace(",","%2C").replace(":","%3A").replace("\"","%22")
-    # print response
-    results = response['response']['docs']
-    # print len(results)
-    if len(results) == 0:
-        if "cvfv" in str(birthmark):
-            fuzzy_count_fault[0] += 1
-        elif "fmc" in str(birthmark):
-            fuzzy_count_fault[1] += 1
-        elif "fuc" in str(birthmark):
-            fuzzy_count_fault[2] += 1
-        elif "2gram" in str(birthmark):
-            fuzzy_count_fault[3] += 1
-        elif "5gram" in str(birthmark):
-            fuzzy_count_fault[4] += 1
-        elif "smc" in str(birthmark):
-            fuzzy_count_fault[5] += 1
-        elif "uc" in str(birthmark):
-            fuzzy_count_fault[6] += 1
-        elif "wsp" in str(birthmark):
-            fuzzy_count_fault[7] += 1
-        fault_count += 1
-    else:
-        if "cvfv" in str(birthmark):
-            fuzzy_count_correct[0] += len(results)
-            hit_count[0] += 1
-        elif "fmc" in str(birthmark):
-            fuzzy_count_correct[1] += len(results)
-            hit_count[1] += 1
-        elif "fuc" in str(birthmark):
-            fuzzy_count_correct[2] += len(results)
-            hit_count[2] += 1
-        elif "2gram" in str(birthmark):
-            fuzzy_count_correct[3] += len(results)
-            hit_count[3] += 1
-        elif "5gram" in str(birthmark):
-            fuzzy_count_correct[4] += len(results)
-            hit_count[4] += 1
-        elif "smc" in str(birthmark):
-            fuzzy_count_correct[5] += len(results)
-            hit_count[5] += 1
-        elif "uc" in str(birthmark):
-            fuzzy_count_correct[6] += len(results)
-            hit_count[6] += 1
-        elif "wsp" in str(birthmark):
-            fuzzy_count_correct[7] += len(results)
-            hit_count[7] += 1
-        correct_count += len(results)
-    # print "none_count:"+str(fault_count)
-    # print "is_count:"+str(correct_count)
-    # search_count += 1
-    # print search_count
-    # print
-    # print "fuzzy_count_correct"
-    # for n in fuzzy_count_correct:
-    #     print n
-    # print
-    # print "fuzzy_count_fault"
-    # for m in fuzzy_count_fault:
-    #     print m
-    # print
-    # print "hit_count"
-    # for o in hit_count:
-    #     print o
-    # print "data: "+birthmark
+    numFound_value = 0
+    # if(len(quely) <= 4000 and len(quely) != 0 and quely != "3\:\:"):
+    if(len(quely) <= 4000 and len(quely) != 0):
+        start = time.time()
+        res = urllib.urlopen(str(url_mae)+str(url).replace(",","%2C").replace(":","%3A"))
+        tmp_res = res.read()
+
+        if tmp_res is not None and tmp_res:
+            response = eval(tmp_res)
+            # print response
+            # print
+            # print
+            # print response['response']
 
 
-    count = 0
-    # # result_annalysys
-    for hit in results:
-        # print count
-        # count += 1
-        if Decimal(hit['lev']) < Decimal('0.75'):
-            print
-            print
-            print
-            print
-            print hit['lev']
-            print
-            print
-            print
-            time.sleep(1.0)
-            break
-        # print hit['filename'],hit['value']
-        # print hit['score']
-        #print pydeep.compare(str(quely),str(hit['value'][0]))
-        distance = editdistance.eval(str(quely),str(hit['value']))
-        length = max(len(str(quely)), len(str(hit['value'])))
-        ans = 1.0 - float(distance) / length
-        b = birthmark.split("_")
-        # print b
-        print str(ans) + ","+str(hit['lev']) + ","+str(b[1])
-        fuzzy_value.append(str(ans))
-        fuzzy_lev.append(str(hit['lev']))
-        fuzzy_birth.append(str(b[1]))
-        # print "score="+str(hit['score'])+",fuzzy="+str(ans) + ",lev="+str(hit['lev']) + ",birth="+str(b[1])
-        count += 1
-        # if(count >= 1):
-        #     break
-        if Decimal(str(ans)) >= Decimal('0.75'):
-            if "cvfv" in str(birthmark):
-                cvfv_count += 1
-            elif "fmc" in str(birthmark):
-                fmc_count += 1
-            elif "fuc" in str(birthmark):
-                fuc_count += 1
-            elif "2gram" in str(birthmark):
-                _2gram_count += 1
-            elif "5gram" in str(birthmark):
-                _5gram_count += 1
-            elif "smc" in str(birthmark):
-                smc_count += 1
-            elif "uc" in str(birthmark):
-                uc_count += 1
-            elif "wsp" in str(birthmark):
-                wsp_count += 1
-        elif Decimal(str(ans)) < Decimal('0.75') and Decimal(str(ans)) > Decimal('0.25'):
-            if "cvfv" in str(birthmark):
-                middle_count[0] += 1
-            elif "fmc" in str(birthmark):
-                middle_count[1] += 1
-            elif "fuc" in str(birthmark):
-                middle_count[2] += 1
-            elif "2gram" in str(birthmark):
-                middle_count[3] += 1
-            elif "5gram" in str(birthmark):
-                middle_count[4] += 1
-            elif "smc" in str(birthmark):
-                middle_count[5] += 1
-            elif "uc" in str(birthmark):
-                middle_count[6] += 1
-            elif "wsp" in str(birthmark):
-                middle_count[7] += 1
-        else:
-            if "cvfv" in str(birthmark):
-                cvfv_fault_count += 1
-            elif "fmc" in str(birthmark):
-                fmc_fault_count += 1
-            elif "fuc" in str(birthmark):
-                fuc_fault_count += 1
-            elif "2gram" in str(birthmark):
-                _2gram_fault_count += 1
-            elif "5gram" in str(birthmark):
-                _5gram_fault_count += 1
-            elif "smc" in str(birthmark):
-                smc_fault_count += 1
-            elif "uc" in str(birthmark):
-                uc_fault_count += 1
-            elif "wsp" in str(birthmark):
-                wsp_fault_count += 1
-    # elapsed_time = time.time() - start
-    # global all_time
-    # all_time += elapsed_time
-    # print "All_time:"+str(all_time)
-    # print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
-    # print "fuzzy 0.75"
-    # print
-    # print cvfv_count
-    # print fmc_count
-    # print fuc_count
-    # print _2gram_count
-    # print _5gram_count
-    # print smc_count
-    # print uc_count
-    # print wsp_count
-    # print
-    # print "fuzzy 0.75-0.25"
-    # for l in middle_count:
-    #     print l
-    # print
-    # print "fuzzy 0.25"
-    # print
-    # print cvfv_fault_count
-    # print fmc_fault_count
-    # print fuc_fault_count
-    # print _2gram_fault_count
-    # print _5gram_fault_count
-    # print smc_fault_count
-    # print uc_fault_count
-    # print wsp_fault_count
-    # print
-    # for k,l,m in zip(fuzzy_value,fuzzy_lev,fuzzy_birth):
-    #     print k+","+l+","+m
-    # print
+            #### search start
+            numFound_value = getnumFound(response,100,url,url_query_tmp,url_mae,url_query)
+            elapsed_time = time.time() - start
+            global all_time
+            all_time += elapsed_time
+            print "All_time:"+str(all_time)
+            print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+
+
+            if numFound_value is not None:
+                for results in all_list_:
+
+                    # result_annalysys
+                    for hit in results['response']['docs']:
+                        print hit['lev']
+                        if Decimal(str(hit['lev'])) < Decimal('0.5'):
+                            break
+                        # birth_class = hit['filename'].replace(".","/")
+                        # place = birth_class[0].split(":")
+                        # birth_kind = birthmark.split("_")
+                        print "lev"+ str(hit['lev'])
+                        start = time.time()
+                        distance = editdistance.eval(str(quely),str(hit['value']))
+                        length = max(len(str(quely)), len(str(hit['value'])))
+                        ans = 1.0 - float(distance) / length
+                        elapsed_time = time.time() - start
+                        all_comparison_time += elapsed_time
+                        print "all_comparison_time:"+str(all_comparison_time)
+                        print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+                        if Decimal(str(ans)) >= Decimal('0.5'):
+                            dict_[str(birthmark)] += 1
+                            non_dict_[str(birthmark)] += 1
+                        else:
+                            non_dict_[str(birthmark)] += 1
+                        print dict_
+                        print non_dict_
 
 
 
+                        # print hit['place']
+                        # print birth_class
+                        # print classname
+                        # if os.path.isfile("../../data/birth_search_result/"+birth_class+"-"+classname+"-"+str(hit['lev'])+".csv") == False:
+                        #     t = commands.getoutput("java -jar ~/birthmark_server/stigmata/target/stigmata-5.0-SNAPSHOT.jar -b "+birth_kind[1]+" compare ../../data/jar/"+birth_class.replace(".","/").replace("$","\$")+".class ../../data/jar/"+classname.replace(".","/").replace("$","\$")+".class 2>&1 | tee ../../data/birth_search_result/"+birth_class.replace("/",".")+"-"+classname+"-"+str(hit['lev'])+".csv")
+                        #     t = t.split("\n")
+                        #     print t
+                        #     # print str(int(t[0].replace(" ns","")))
+                        #     all_comparison_time += int(t[0].replace(" ns",""))
+                        #     kaisuu += 1
+                        #     print "comparison_time"
+                        #     print all_comparison_time
+                        #     print kaisuu
+                all_list_ = []
 
-tmp = glob.glob("../../data/search_birthmark/*.csv")
-# print tmp
-print "fuzzy_start"
-dist_kind = sys.argv[1]
-# del tmp[0]
-for i in tmp:
-    if "jar" in str(i):
-        reader = commands.getoutput("python ../../2015scis_yamamoto/prog/fuzzyhashing.py -b "+i).split("\n");
-        print reader
-        # reader = open(i).read().split("\n")
-        for row in reader:
-            # print "row:"+row
-            # row.replace("<","&lt;").replace(">","&gt;").replace("&","&amp;").replace("\"","&quot;").replace("\'","&apos;")
-            fuzzy_split = row.split(" ")
-            if len(fuzzy_split) >= 2:
-                class_name = fuzzy_split[0].split(".")
-                # print "search_class"
-                # print fuzzy_split[3]
-                if "cvfv" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]), "fuzzy_cvfv", fuzzy_split[1])
-                elif "fmc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_fmc", fuzzy_split[1])
-                elif "fuc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_fuc", fuzzy_split[1])
-                elif "2gram" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_2gram", fuzzy_split[1])
-                elif "5gram" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_5gram", fuzzy_split[1])
-                elif "smc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_smc", fuzzy_split[1])
-                elif "uc" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_uc", fuzzy_split[1])
-                elif "wsp" in str(i):
-                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_wsp", fuzzy_split[1])
+
+if __name__ == "__main__":
+    args = sys.argv
+    del args[0]
+    print args
+    #tmp = glob.glob("*.csv")
+    for i in args:
+        reader = commands.getoutput("python ../../2015scis_yamamoto/prog/fuzzyhashing.py -b "+i).split("\n")
+        if '\0' not in open(i).read():
+            if reader is not None:
+                for row in reader:
+                    row = row.split(" ")
+                    if len(row) >= 2:
+                        # print "hello:"+str(row[3])
+                        # search_class = row[1].split(":")
+                        # search_class_ = search_class[2].split("!")
+                        birthmarks = i.split("-")
+                        birthmarks[-1] = birthmarks[-1].replace(".csv","")
+                        solr_serchpy(row[0],"fuzzy_"+birthmarks[-1],str(row[1]))
+    print "All_time:"+str(all_time)
+    print "all_comparison_time:"+str(all_comparison_time)

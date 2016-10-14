@@ -41,13 +41,12 @@ for i in tmp:
         reader = commands.getoutput("python ~/yamamoto15scis/prog/fuzzyhashing.py -b "+i).split("\n");
         # reader = open(i).read().split("\n")
         for row in reader:
-            # print "row:"+row
             # row.replace("<","&lt;").replace(">","&gt;").replace("&","&amp;").replace("\"","&quot;").replace("\'","&apos;")
             fuzzy_split = row.split(" ")
             if len(fuzzy_split) >= 2:
                 class_name = fuzzy_split[0].split(".")
                 # print "search_class"
-                # print fuzzy_split[3]
+                # print fuzzy_split[1]
                 if "cvfv" in str(i):
                     fuzzy_serchpy(os.path.basename(class_name[-1]), "fuzzy_cvfv", fuzzy_split[1])
                 elif "fmc" in str(i):
@@ -58,6 +57,12 @@ for i in tmp:
                     fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_2gram", fuzzy_split[1])
                 elif "3gram" in str(i):
                     fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_3gram", fuzzy_split[1])
+                elif "4gram" in str(i):
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_4gram", fuzzy_split[1])
+                elif "5gram" in str(i):
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_5gram", fuzzy_split[1])
+                elif "6gram" in str(i):
+                    fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_6gram", fuzzy_split[1])
                 elif "smc" in str(i):
                     fuzzy_serchpy(os.path.basename(class_name[-1]),"fuzzy_smc", fuzzy_split[1])
                 elif "uc" in str(i):

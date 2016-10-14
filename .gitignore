@@ -6,6 +6,7 @@
 *.jar
 *.xml
 stigmata
+solr-5.5.0
 2015scis_yamamoto
 data/*
 !data/birth_search_result/.gitkeep
