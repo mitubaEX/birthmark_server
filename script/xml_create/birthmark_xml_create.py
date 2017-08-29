@@ -26,13 +26,22 @@ def init(filename):
     filename.write("<doc>\n")
 
 def writer(filename, row):
-    filename.write("</doc>\n")
-    filename.write("<doc>\n")
-    filename.write("<field name=\"filename\">"+row[0]+"</field>\n")
-    filename.write("<field name=\"place\">"+row[1]+"</field>\n")
-    filename.write("<field name=\"barthmark\">"+row[2]+"</field>\n")
-    if len(row[3]) <= 30000:
-        filename.write("<field name=\"data\">"+row[3].decode('utf-8').replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')+"</field>\n")
+    if uc == filename:
+        filename.write("</doc>\n")
+        filename.write("<doc>\n")
+        filename.write("<field name=\"filename\">"+unicode(row[0], 'utf-8')+"</field>\n")
+        filename.write("<field name=\"place\">"+unicode(row[1], 'utf-8')+"</field>\n")
+        filename.write("<field name=\"barthmark\">"+unicode(row[2], 'utf-8')+"</field>\n")
+        if len(row[3]) <= 30000:
+            filename.write("<field name=\"data\">"+row[3].decode('utf-8').replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')+"</field>\n")
+    else:
+        filename.write("</doc>\n")
+        filename.write("<doc>\n")
+        filename.write("<field name=\"filename\">"+row[0]+"</field>\n")
+        filename.write("<field name=\"place\">"+row[1]+"</field>\n")
+        filename.write("<field name=\"barthmark\">"+row[2]+"</field>\n")
+        if len(row[3]) <= 30000:
+            filename.write("<field name=\"data\">"+row[3].decode('utf-8').replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')+"</field>\n")
 
 def finish_writer(filename):
     filename.write("</doc>\n")
@@ -46,7 +55,6 @@ for j in files:
 tmp = glob.glob("../../data/birthmark/*.csv")
 #tmp = sys.argv
 #del tmp[0]
-print tmp
 count = 0
 for i in tmp:
     reader = open(i).read().split('\n')
@@ -54,7 +62,6 @@ for i in tmp:
         if reader is not None:
             for row in reader:
                 row = row.split(',',3)
-                print row
                 if len(row) >= 4:
                     row[0] = row[0].replace('\n',"").replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')
                     row[1] = row[1].replace('\n',"").replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')
@@ -88,7 +95,7 @@ for i in tmp:
                         # fuc.write("<field name=\"barthmark\">"+row[2]+"</field>\n")
                         # if len(row[3]) <= 30000:
                         #     fuc.write("<field name=\"data\">"+row[3].decode('utf-8').replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')+"</field>\n")
-                    elif "2gram" in str(i):
+                    elif "2-gram" in str(i):
                         writer(_2gram, row)
                         # kgram.write("</doc>\n")
                         # kgram.write("<doc>\n")
@@ -97,13 +104,13 @@ for i in tmp:
                         # kgram.write("<field name=\"barthmark\">"+row[2]+"</field>\n")
                         # if len(row[3]) <= 30000:
                         #     kgram.write("<field name=\"data\">"+row[3].decode('utf-8').replace('<','&lt;').replace(">",'&gt;').replace("&",'&amp;').replace("\"",'&quot;').replace("\'",'&apos;')+"</field>\n")
-                    elif "3gram" in str(i):
+                    elif "3-gram" in str(i):
                         writer(_3gram, row)
-                    elif "4gram" in str(i):
+                    elif "4-gram" in str(i):
                         writer(_4gram, row)
-                    elif "5gram" in str(i):
+                    elif "5-gram" in str(i):
                         writer(_5gram, row)
-                    elif "6gram" in str(i):
+                    elif "6-gram" in str(i):
                         writer(_6gram, row)
                     elif "smc" in row[2]:
                         writer(smc, row)
