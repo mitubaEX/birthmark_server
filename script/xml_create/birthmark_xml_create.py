@@ -99,15 +99,15 @@ for i in tmp:
     if '\0' not in open(i).read():
         if reader is not None:
             for row in reader:
-                if "2-gram" in str(i):
+                if "2gram" in str(i):
                     _2gram_list.append(row)
-                elif "3-gram" in str(i):
+                elif "3gram" in str(i):
                     _3gram_list.append(row)
-                elif "4-gram" in str(i):
+                elif "4gram" in str(i):
                     _4gram_list.append(row)
-                elif "5-gram" in str(i):
+                elif "5gram" in str(i):
                     _5gram_list.append(row)
-                elif "6-gram" in str(i):
+                elif "6gram" in str(i):
                     _6gram_list.append(row)
                 elif "uc" in str(i):
                     uc_list.append(row)
