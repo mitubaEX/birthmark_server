@@ -96,21 +96,21 @@ all_list_ = []
 # print tmp
 for i in tmp:
     reader = open(i).read().split('\n')
-    if '\0' not in open(i).read():
-        if reader is not None:
-            for row in reader:
-                if "2gram" in str(i):
-                    _2gram_list.append(row)
-                elif "3gram" in str(i):
-                    _3gram_list.append(row)
-                elif "4gram" in str(i):
-                    _4gram_list.append(row)
-                elif "5gram" in str(i):
-                    _5gram_list.append(row)
-                elif "6gram" in str(i):
-                    _6gram_list.append(row)
-                elif "uc" in str(i):
-                    uc_list.append(row)
+    # if '\0' not in open(i).read():
+    if reader is not None:
+        for row in reader:
+            if "2gram" in str(i):
+                _2gram_list.append(row)
+            elif "3gram" in str(i):
+                _3gram_list.append(row)
+            elif "4gram" in str(i):
+                _4gram_list.append(row)
+            elif "5gram" in str(i):
+                _5gram_list.append(row)
+            elif "6gram" in str(i):
+                _6gram_list.append(row)
+            elif "uc" in str(i):
+                uc_list.append(row)
 
 
 all_ = [_2gram_list, _3gram_list, _4gram_list,
