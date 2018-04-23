@@ -64,7 +64,7 @@ def writer(filename, row):
                        unicode(row[2], 'utf-8')+"</field>\n")
         if len(row[3]) <= 30000:
             filename.write("<field name=\"data\">"+row[3].decode('utf-8').replace('<', '&lt;').replace(">", '&gt;').replace(
-                "&", '&amp;').replace("\"", '&quot;').replace("\'", '&apos;').replace("&quot;", "")+"</field>\n")
+                "&", '&amp;').replace("\"", '&quot;').replace("\'", '&apos;').replace("&quot;", "").replace("&amp;quot;", "")+"</field>\n")
     else:
         encode_row = get_hex_row(row[3].replace("&quot;", ""))
         filename.write("</doc>\n")
@@ -136,29 +136,26 @@ for index, i in enumerate(all_):
                 row[3] = row[3].replace('\n', "").replace('<', '&lt;').replace(
                     ">", '&gt;').replace("&", '&amp;').replace("\"", '&quot;').replace("\'", '&apos;')
                 if index == 0:
-                    if len(row[3].split(',')) <= 15:
-                        continue
-                    writer(_2gram, row)
+                    if len(row[3].split(',')) >= 15:
+                        writer(_2gram, row)
+                        if 'com.google.protobuf' in row[0]:
+                            print(row[0])
+                            print(len(row[3].split(',')))
                 elif index == 1:
-                    if len(row[3].split(',')) <= 24:
-                        continue
-                    writer(_3gram, row)
+                    if len(row[3].split(',')) >= 24:
+                        writer(_3gram, row)
                 elif index == 2:
-                    if len(row[3].split(',')) <= 31:
-                        continue
-                    writer(_4gram, row)
+                    if len(row[3].split(',')) >= 31:
+                        writer(_4gram, row)
                 elif index == 3:
-                    if len(row[3].split(',')) <= 37:
-                        continue
-                    writer(_5gram, row)
+                    if len(row[3].split(',')) >= 37:
+                        writer(_5gram, row)
                 elif index == 4:
-                    if len(row[3].split(',')) <= 41:
-                        continue
-                    writer(_6gram, row)
+                    if len(row[3].split(',')) >= 41:
+                        writer(_6gram, row)
                 elif index == 5:
-                    if len(row[3].split(',')) <= 2:
-                        continue
-                    writer(uc, row)
+                    if len(row[3].split(',')) >= 2:
+                        writer(uc, row)
                 count += 1
                 if count == 2000:
                     count = 0
