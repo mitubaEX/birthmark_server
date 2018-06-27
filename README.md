@@ -44,12 +44,12 @@ mkdir data/jar
 cp ${jar_files} data/jar
 
 # extract birthmark from jar files
-cd script/xml_create && sh find_jar_ext_birthmark.sh 2gram 3gram 4gram 5gram 6gram
+cd script/xml_create && sh find_jar_ext_birthmark.sh 2gram 3gram 4gram 5gram 6gram uc
 
 # create birthmark_xml
 mkdir data/birth_xml
-cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram ; do python birthmark_xml_create.py "$i";done
+cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram uc ; do python birthmark_xml_create.py "$i";done
 
 # post to solr ( core -> 2gram 3gram 4gram 5gram 6gram )
-for i in 2gram 3gram 4gram 5gram 6gram ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
+for i in 2gram 3gram 4gram 5gram 6gram uc ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
 ```
