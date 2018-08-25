@@ -54,6 +54,27 @@ cd script/xml_create && sh find_jar_ext_birthmark.sh 2gram 3gram 4gram 5gram 6gr
 mkdir data/birth_xml
 cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram uc ; do python birthmark_xml_create_python3.py "$i";done
 
-# post to solr ( core -> 2gram 3gram 4gram 5gram 6gram )
+# solr dir
+## create core
+for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
+
+## fix strings field of managed-schema
+```
+<fieldType name="strings" class="solr.TextField" multiValued="false">
+      <analyzer type="index">
+          <tokenizer class="solr.PatternTokenizerFactory" pattern="\s*,\s*"/>
+          <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+         <filter class="solr.LowerCaseFilterFactory"/>
+     </analyzer>
+     <analyzer type="query">
+         <tokenizer class="solr.PatternTokenizerFactory" pattern="\s*,\s*"/>
+         <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+         <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+         <filter class="solr.LowerCaseFilterFactory"/>
+     </analyzer>
+ </fieldType>
+```
+
+## post to solr ( core -> 2gram 3gram 4gram 5gram 6gram )
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
 ```
