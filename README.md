@@ -34,10 +34,14 @@
 バースマークサーバーに入れるためのデータを作成するところまでをやります．
 検索は [ToolForResearch](https://github.com/mitubaEX/ToolForResearch) を使ってください
 
-```shellscript
+```sh
 # clone stigmata
 git clone https://github.com/tamada/stigmata.git
 cd stigmata && mvn package
+
+# get apache solr
+curl -o solr-6.4.1.zip http://archive.apache.org/dist/lucene/solr/6.4.1/solr-6.4.1.zip
+unzip solr-6.4.1.zip
 
 # mv jar files
 mkdir data/jar
@@ -48,7 +52,7 @@ cd script/xml_create && sh find_jar_ext_birthmark.sh 2gram 3gram 4gram 5gram 6gr
 
 # create birthmark_xml
 mkdir data/birth_xml
-cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram uc ; do python birthmark_xml_create.py "$i";done
+cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram uc ; do python birthmark_xml_create_python3.py "$i";done
 
 # post to solr ( core -> 2gram 3gram 4gram 5gram 6gram )
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
