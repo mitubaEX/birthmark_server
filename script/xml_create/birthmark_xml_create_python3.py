@@ -34,6 +34,7 @@ def calcThreshold(birthmark):
 
 
 threshold = int(calcThreshold(sys.argv[1]))
+print(threshold)
 output = open("../../data/birth_xml/birth_" + sys.argv[1] + ".xml", "w")
 output.write("<add>\n")
 output.write("<doc>\n")
