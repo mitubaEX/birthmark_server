@@ -59,7 +59,6 @@ cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram uc ; do python 
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
 
 ## fix strings field of managed-schema
-```
 <fieldType name="strings" class="solr.TextField" multiValued="false">
       <analyzer type="index">
           <tokenizer class="solr.PatternTokenizerFactory" pattern="\s*,\s*"/>
@@ -73,8 +72,7 @@ for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
          <filter class="solr.LowerCaseFilterFactory"/>
      </analyzer>
  </fieldType>
-```
 
-## post to solr ( core -> 2gram 3gram 4gram 5gram 6gram )
+## post to solr ( core -> 2gram 3gram 4gram 5gram 6gram uc )
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
 ```
