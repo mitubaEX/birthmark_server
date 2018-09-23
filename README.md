@@ -34,6 +34,8 @@
 バースマークサーバーに入れるためのデータを作成するところまでをやります．
 検索は [ToolForResearch](https://github.com/mitubaEX/ToolForResearch) を使ってください
 
+apache solrのバージョンは，6.4.0推奨．
+
 ```sh
 # clone stigmata
 git clone https://github.com/tamada/stigmata.git
@@ -76,3 +78,10 @@ for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
 ## post to solr ( core -> 2gram 3gram 4gram 5gram 6gram uc )
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
 ```
+
+## edit distanceなどを利用したい場合
+
+apache solrのバージョンは，5.5.0推奨．
+
+- strings fieldを変更せずドキュメントを検索エンジンに登録してください．
+- 登録後，multiValued=trueを全てfalseにするとおそらく動くはずです．
