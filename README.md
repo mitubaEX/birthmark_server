@@ -82,6 +82,14 @@ for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
 ```
 
+検索スクリプトは[これ](https://github.com/mitubaEX/research/blob/master/docs/paper_experiment/FP/procedure/row_search.py)を使ったらよい
+
+使用例：
+
+```
+paste <(for i in 2gram 3gram 4gram 5gram 6gram uc;do echo $i ;done) <(for j in 13 22 28 32 35 2; do echo $j ;done) | while read birth threshold ; do for i in data/search_birthmark/abdera-extensions-html-1.1.2.jar-"$birth".csv; do python3 row_search.py $i $threshold "$birth" > time_"$birth".csv ; done;done
+```
+
 ## edit distanceなどを利用したい場合
 
 apache solrのバージョンは，5.5.0推奨．
