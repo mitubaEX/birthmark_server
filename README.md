@@ -57,6 +57,9 @@ mkdir data/birth_xml
 cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram uc ; do python birthmark_xml_create_python3.py "$i";done
 
 # solr dir
+# start solr server
+bin/solr start
+
 ## create core
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
 
