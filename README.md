@@ -57,11 +57,16 @@ mkdir data/birth_xml
 cd ./script/xml_create && for i in 2gram 3gram 4gram 5gram 6gram uc ; do python birthmark_xml_create_python3.py "$i";done
 
 # solr dir
+cd solr-xxx/
+
 # start solr server
 bin/solr start
 
 ## create core
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
+
+## wget configfiles
+for i in 2gram 3gram 4gram 5gram 6gram uc ; do rm server/solr/"$i"/conf/managed-schema && wget -O  server/solr/"$i"/conf/managed-schema 'https://raw.githubusercontent.com/mitubaEX/birthmark_server/master/managed-schema';done
 
 ## fix strings field of managed-schema
 <fieldType name="strings" class="solr.TextField" multiValued="false">
@@ -77,6 +82,9 @@ for i in 2gram 3gram 4gram 5gram 6gram uc ; do bin/solr create -c "$i" ;done
          <filter class="solr.LowerCaseFilterFactory"/>
      </analyzer>
  </fieldType>
+
+## restart solr
+bin/solr restart
 
 ## post to solr ( core -> 2gram 3gram 4gram 5gram 6gram uc )
 for i in 2gram 3gram 4gram 5gram 6gram uc ; do find ${birth_xml_dir} -name "*$i*" | xargs -I% bin/post -c "$i" ;done
